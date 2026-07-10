@@ -12,12 +12,15 @@ export function TrainingHalo({
   children,
   label,
   value,
+  clock = false,
 }: {
   size?: number;
   className?: string;
   children?: React.ReactNode;
   label?: string;
   value?: string;
+  /** Spin the ticked ring like a fast clock (5 clock-seconds per real second). */
+  clock?: boolean;
 }) {
   return (
     <div
@@ -34,8 +37,11 @@ export function TrainingHalo({
         }}
       />
 
-      {/* Rim + ticks */}
-      <svg viewBox="0 0 100 100" className="absolute inset-0 size-full">
+      {/* Rim + ticks (spins as a clock when enabled) */}
+      <svg
+        viewBox="0 0 100 100"
+        className={cn("absolute inset-0 size-full", clock && "clock-spin")}
+      >
         <circle cx="50" cy="50" r="47" fill="none" stroke="var(--halo-rim)" strokeWidth="0.7" opacity="0.65" />
         <circle cx="50" cy="50" r="43.5" fill="none" stroke="var(--glass-border)" strokeWidth="0.5" />
         <circle

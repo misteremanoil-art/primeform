@@ -151,25 +151,6 @@ export function PortalPreview() {
                 <MiniDashboard />
               </div>
             </div>
-
-            {/* Detached weekly-progress card */}
-            <div className="absolute -left-2 top-8 hidden w-[132px] sm:block">
-              <GlassCard variant="air" className="grid place-items-center rounded-md p-3">
-                <PlateProgressRing value={91} size={74} strokeWidth={8} label="91%" />
-              </GlassCard>
-            </div>
-
-            {/* Detached coach-feedback card */}
-            <div className="absolute -bottom-4 right-0 hidden w-[220px] sm:block">
-              <GlassCard variant="air" className="rounded-md p-3.5">
-                <p className="text-[0.58rem] font-bold uppercase tracking-widest text-accent">
-                  Coach feedback
-                </p>
-                <p className="mt-1 text-xs leading-relaxed text-ink">
-                  “Your lower-body numbers improved again this week.”
-                </p>
-              </GlassCard>
-            </div>
           </Reveal>
         </div>
 

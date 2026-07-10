@@ -13,7 +13,7 @@ export function HeroVisual() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
       >
-        <TrainingHalo size={480}>
+        <TrainingHalo size={480} clock>
           <CoachPortrait className="size-[280px]" />
         </TrainingHalo>
       </motion.div>
@@ -25,7 +25,7 @@ export function HeroVisual() {
 export function HeroVisualMobile() {
   return (
     <div className="grid place-items-center pt-2 lg:hidden">
-      <TrainingHalo size={280}>
+      <TrainingHalo size={280} clock>
         <CoachPortrait className="size-[168px]" />
       </TrainingHalo>
     </div>
