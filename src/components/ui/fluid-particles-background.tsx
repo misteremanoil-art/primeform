@@ -7,6 +7,10 @@ interface CyberBackgroundProps {
   children?: React.ReactNode;
   particleCount?: number;
   noiseIntensity?: number;
+  /** Particle travel speed in px per frame (base). */
+  speed?: number;
+  /** How fast the flow field itself evolves. */
+  flowSpeed?: number;
   particleSize?: { min: number; max: number };
   className?: string;
 }
@@ -122,6 +126,8 @@ export const FluidParticlesBackground = ({
   children,
   particleCount = 2000,
   noiseIntensity = 0.003,
+  speed = 2,
+  flowSpeed = 0.0015,
   particleSize = { min: 0.5, max: 2 },
   className,
 }: CyberBackgroundProps) => {
@@ -139,7 +145,7 @@ export const FluidParticlesBackground = ({
 
     let frame = 0;
     let last = 0;
-    const frameInterval = 1000 / 30; // cap at ~30fps to spare the main thread
+    const frameInterval = 1000 / 45; // cap fps — high enough for smooth fast motion
     const prefersReduced =
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -190,12 +196,12 @@ export const FluidParticlesBackground = ({
         const n = noise.simplex3(
           particle.x * noiseIntensity,
           particle.y * noiseIntensity,
-          frame * 0.0015,
+          frame * flowSpeed,
         );
 
         const angle = n * Math.PI * 4;
-        particle.velocity.x = Math.cos(angle) * 2;
-        particle.velocity.y = Math.sin(angle) * 2;
+        particle.velocity.x = Math.cos(angle) * speed;
+        particle.velocity.y = Math.sin(angle) * speed;
 
         particle.x += particle.velocity.x;
         particle.y += particle.velocity.y;
@@ -241,7 +247,7 @@ export const FluidParticlesBackground = ({
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", handleResize);
     };
-  }, [particleCount, noiseIntensity, sizeMin, sizeMax, noise]);
+  }, [particleCount, noiseIntensity, speed, flowSpeed, sizeMin, sizeMax, noise]);
 
   return (
     <div

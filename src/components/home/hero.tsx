@@ -21,6 +21,8 @@ export function Hero() {
       <FluidParticlesBackground
         particleCount={550}
         noiseIntensity={0.009}
+        speed={4.5}
+        flowSpeed={0.0035}
         particleSize={{ min: 0.6, max: 2.4 }}
         className="pointer-events-none absolute inset-0 !h-full bg-transparent"
       />
