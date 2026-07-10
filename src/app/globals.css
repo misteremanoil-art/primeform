@@ -4,99 +4,99 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* =========================================================================
-   PRIMEFORM — Warm Glass Performance design tokens
-   Light and dark are designed separately, never inverted.
+   PRIMEFORM — Minimalist neutral design tokens (oklch)
+   Clean grayscale, one destructive red. Light and dark designed separately.
    ========================================================================= */
 
 :root {
-  /* Surfaces — Warm Day */
-  --bg: #f3eee7;
-  --bg-2: #eae1d7;
-  --surface: #fff9f2;
-  --surface-2: #f8f1e8;
+  /* Surfaces */
+  --bg: oklch(1 0 0);
+  --bg-2: oklch(0.97 0 0);
+  --surface: oklch(0.995 0 0);
+  --surface-2: oklch(0.955 0 0);
 
   /* Ink */
-  --ink: #191613;
-  --muted: #72685f;
-  --faint: #9a8f83;
+  --ink: oklch(0.145 0 0);
+  --muted: oklch(0.556 0 0);
+  --faint: oklch(0.652 0 0);
 
-  /* Semantic — identical meaning across themes */
-  --accent: #f27649; /* active / action / current workout */
-  --accent-ink: #ffffff; /* text on accent */
-  --gold: #e9bc6a; /* achievement / PR */
-  --olive: #8fa77b; /* completed / healthy */
-  --clay: #bc745d; /* attention (no alarm) */
-  --danger: #c14a3b; /* critical only */
+  /* Semantic — monochrome; a single destructive red */
+  --accent: oklch(0.205 0 0); /* action / active — near-black */
+  --accent-ink: oklch(0.985 0 0); /* text on accent */
+  --gold: oklch(0.45 0 0); /* achievement */
+  --olive: oklch(0.45 0 0); /* completed */
+  --clay: oklch(0.556 0 0); /* attention */
+  --danger: oklch(0.577 0.245 27.325); /* critical only */
 
   /* Lines & highlights */
-  --line: color-mix(in oklab, var(--ink) 12%, transparent);
-  --line-strong: color-mix(in oklab, var(--ink) 20%, transparent);
-  --highlight: rgba(255, 255, 255, 0.6);
+  --line: oklch(0.922 0 0);
+  --line-strong: oklch(0.87 0 0);
+  --highlight: oklch(1 0 0 / 0.7);
 
-  /* Glass system */
-  --glass-rgb: 248, 241, 232;
+  /* Glass system — neutral */
+  --glass-rgb: 255, 255, 255;
   --glass-alpha: 0.66;
-  --glass-border: color-mix(in oklab, #7a5a3c 16%, transparent);
-  --glass-highlight: rgba(255, 255, 255, 0.55);
-  --glass-shadow: 0 22px 60px rgba(60, 40, 20, 0.12);
+  --glass-border: oklch(0.145 0 0 / 0.08);
+  --glass-highlight: oklch(1 0 0 / 0.6);
+  --glass-shadow: 0 1px 3px 0 oklch(0 0 0 / 0.06), 0 12px 40px -24px oklch(0 0 0 / 0.16);
 
-  /* Atmosphere */
-  --glow-orange: rgba(242, 118, 73, 0.22);
-  --glow-gold: rgba(233, 188, 106, 0.16);
-  --halo-fill: rgba(255, 252, 246, 0.55);
-  --halo-rim: rgba(233, 188, 106, 0.55);
-  --grain-opacity: 0.05;
+  /* Atmosphere — nearly flat, no colour glow */
+  --glow-orange: oklch(0.145 0 0 / 0.015);
+  --glow-gold: oklch(0.145 0 0 / 0.01);
+  --halo-fill: oklch(1 0 0 / 0.5);
+  --halo-rim: oklch(0.145 0 0 / 0.14);
+  --grain-opacity: 0.02;
 
   /* Chart */
-  --chart-line: #f27649;
-  --chart-grid: color-mix(in oklab, var(--ink) 8%, transparent);
+  --chart-line: oklch(0.205 0 0);
+  --chart-grid: oklch(0.145 0 0 / 0.08);
 
   /* Radii */
-  --radius-sm: 12px;
-  --radius-md: 16px;
-  --radius-card: 24px;
-  --radius-hero: 30px;
-  --radius-section: 40px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-card: 16px;
+  --radius-hero: 20px;
+  --radius-section: 28px;
 }
 
 .dark {
-  /* Surfaces — Warm Night */
-  --bg: #13110f;
-  --bg-2: #1b1713;
-  --surface: #211c18;
-  --surface-2: #28211c;
+  /* Surfaces */
+  --bg: oklch(0.205 0 0);
+  --bg-2: oklch(0.24 0 0);
+  --surface: oklch(0.165 0 0);
+  --surface-2: oklch(0.269 0 0);
 
   /* Ink */
-  --ink: #faf2e8;
-  --muted: #b7aa9d;
-  --faint: #8a7d70;
+  --ink: oklch(0.985 0 0);
+  --muted: oklch(0.708 0 0);
+  --faint: oklch(0.6 0 0);
 
-  /* Semantic — same meaning, tuned for contrast */
-  --accent: #ff8154;
-  --accent-ink: #1a120c;
-  --gold: #f0c875;
-  --olive: #a0b78c;
-  --clay: #ce8a76;
-  --danger: #d96a5d;
+  /* Semantic */
+  --accent: oklch(0.922 0 0); /* near-white in dark */
+  --accent-ink: oklch(0.205 0 0);
+  --gold: oklch(0.75 0 0);
+  --olive: oklch(0.75 0 0);
+  --clay: oklch(0.708 0 0);
+  --danger: oklch(0.704 0.191 22.216);
 
-  --line: color-mix(in oklab, var(--ink) 12%, transparent);
-  --line-strong: color-mix(in oklab, var(--ink) 22%, transparent);
-  --highlight: rgba(255, 255, 255, 0.06);
+  --line: oklch(0.269 0 0);
+  --line-strong: oklch(0.37 0 0);
+  --highlight: oklch(1 0 0 / 0.06);
 
-  --glass-rgb: 40, 33, 28;
+  --glass-rgb: 30, 30, 30;
   --glass-alpha: 0.72;
-  --glass-border: color-mix(in oklab, #faf2e8 10%, transparent);
-  --glass-highlight: rgba(255, 255, 255, 0.06);
-  --glass-shadow: 0 26px 70px rgba(0, 0, 0, 0.5);
+  --glass-border: oklch(0.985 0 0 / 0.1);
+  --glass-highlight: oklch(1 0 0 / 0.06);
+  --glass-shadow: 0 1px 3px 0 oklch(0 0 0 / 0.4), 0 20px 60px -30px oklch(0 0 0 / 0.6);
 
-  --glow-orange: rgba(255, 129, 84, 0.2);
-  --glow-gold: rgba(240, 200, 117, 0.1);
-  --halo-fill: rgba(40, 33, 28, 0.5);
-  --halo-rim: rgba(255, 129, 84, 0.55);
-  --grain-opacity: 0.06;
+  --glow-orange: oklch(0.985 0 0 / 0.02);
+  --glow-gold: oklch(0.985 0 0 / 0.015);
+  --halo-fill: oklch(0.269 0 0 / 0.5);
+  --halo-rim: oklch(0.985 0 0 / 0.16);
+  --grain-opacity: 0.025;
 
-  --chart-line: #ff8154;
-  --chart-grid: color-mix(in oklab, var(--ink) 10%, transparent);
+  --chart-line: oklch(0.922 0 0);
+  --chart-grid: oklch(0.985 0 0 / 0.1);
 }
 
 /* =========================================================================
@@ -120,8 +120,8 @@
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
 
-  --font-heading: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
 
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
@@ -219,12 +219,12 @@
     }
   }
 
-  /* Soft warm card that is NOT glass — forms, tables, pricing, long text */
+  /* Solid card that is NOT glass — forms, tables, pricing, long text */
   .surface-card {
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--radius-card);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 14px 40px -24px rgba(60, 40, 20, 0.28);
+    box-shadow: 0 1px 2px oklch(0 0 0 / 0.04), 0 14px 40px -24px oklch(0 0 0 / 0.14);
   }
 
   /* Uppercase micro-label */

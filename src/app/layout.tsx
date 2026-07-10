@@ -1,22 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope, Geist } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Atmosphere } from "@/components/site/atmosphere";
 import { CookieBanner } from "@/components/site/cookie-banner";
 import { Toaster } from "@/components/ui/toaster";
 
-const manrope = Manrope({
-  variable: "--font-manrope",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
   display: "swap",
-  weight: ["500", "600", "700", "800"],
-});
-
-const geist = Geist({
-  variable: "--font-geist",
-  subsets: ["latin"],
-  display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
 const siteUrl = "https://primeform-demo.vercel.app";
@@ -58,8 +52,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f3eee7" },
-    { media: "(prefers-color-scheme: dark)", color: "#13110f" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#333333" },
   ],
 };
 
@@ -71,7 +65,7 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
       data-scroll-behavior="smooth"
-      className={`${manrope.variable} ${geist.variable} h-full antialiased`}
+      className={`${dmSans.variable} h-full antialiased`}
     >
       <body className="relative min-h-full">
         <ThemeProvider

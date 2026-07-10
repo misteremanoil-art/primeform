@@ -100,16 +100,16 @@ function createNoise() {
   };
 }
 
-// Warm brand palette — never pure white / black (see VISUAL_DIRECTION §40).
+// Minimalist neutral palette.
 // `trail` is the per-frame fade colour; `particle` is the base rgb of the dots.
 const COLOR_SCHEME = {
   light: {
-    trail: "rgba(243, 238, 231, 0.07)", // warm stone — light veil, longer trails
-    particle: "80, 55, 35", // warm espresso
+    trail: "rgba(255, 255, 255, 0.06)", // fade toward white
+    particle: "0, 0, 0", // black dots
   },
   dark: {
-    trail: "rgba(19, 17, 15, 0.08)", // espresso — light veil, longer trails
-    particle: "255, 170, 120", // warm orange glow
+    trail: "rgba(48, 48, 48, 0.08)", // fade toward the neutral dark bg
+    particle: "255, 255, 255", // white dots
   },
 } as const;
 
