@@ -34,8 +34,10 @@ export function BarbellTimeline({
           </span>
           <div className="pt-1 sm:pt-2.5">
             <p className="eyebrow text-accent">{item.marker}</p>
-            <h3 className="mt-1 text-lg font-bold sm:text-xl">{item.title}</h3>
-            <p className="mt-1 max-w-md text-sm leading-relaxed text-muted">
+            {item.title && (
+              <h3 className="mt-1 text-lg font-bold sm:text-xl">{item.title}</h3>
+            )}
+            <p className="mt-1.5 max-w-md text-sm leading-relaxed text-muted">
               {item.detail}
             </p>
           </div>

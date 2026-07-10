@@ -122,6 +122,13 @@ interface PrimeState {
   sendMessage: (text: string) => void;
 
   submitApplication: (input: ApplicationInput) => string;
+  captureLead: (input: {
+    name: string;
+    email: string;
+    goal: string;
+    source: string;
+    interest?: Lead["interest"];
+  }) => string;
   createBooking: (input: BookingInput) => string;
 
   updateLeadStatus: (id: string, status: LeadStatus) => void;
@@ -381,6 +388,33 @@ export const usePrimeStore = create<PrimeState>()(
             state.notifications,
             "coach",
             `New coaching application from ${input.fullName}.`,
+          ),
+        }));
+        return id;
+      },
+
+      captureLead: (input) => {
+        const id = uid("l");
+        set((state) => ({
+          leads: [
+            {
+              id,
+              name: input.name,
+              goal: input.goal,
+              source: input.source,
+              interest: input.interest ?? "Unsure",
+              applied: "Just now",
+              appliedOrder: -Date.now(),
+              consultation: "Not booked",
+              status: "New",
+              email: input.email,
+            },
+            ...state.leads,
+          ],
+          notifications: notify(
+            state.notifications,
+            "coach",
+            `New lead from the ${input.source.toLowerCase()}: ${input.name}.`,
           ),
         }));
         return id;
