@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import { Reveal, RevealGroup, revealChild } from "@/components/ui/reveal";
 import { motion } from "framer-motion";
+import { FluidParticlesBackground } from "@/components/ui/fluid-particles-background";
 import { HeroVisual, HeroVisualMobile } from "./hero-visual";
 
 const trustIndicators = [
@@ -15,8 +16,16 @@ const trustIndicators = [
 
 export function Hero() {
   return (
-    <section className="container-p relative pb-8 pt-6 lg:pb-16 lg:pt-10">
-      <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-8">
+    <section className="relative overflow-hidden pb-8 pt-6 lg:pb-16 lg:pt-10">
+      {/* Fluid particle field — drifts behind the hero, over the warm atmosphere */}
+      <FluidParticlesBackground
+        particleCount={550}
+        noiseIntensity={0.009}
+        particleSize={{ min: 0.6, max: 2.4 }}
+        className="pointer-events-none absolute inset-0 !h-full bg-transparent"
+      />
+
+      <div className="container-p relative z-10 grid items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-8">
         {/* Copy */}
         <div>
           <RevealGroup className="max-w-xl">
