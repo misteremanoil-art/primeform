@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { Logo } from "@/components/site/logo";
@@ -14,8 +14,44 @@ const links = [
   { href: "/personal-training", label: "Personal Training" },
   { href: "/results", label: "Results" },
   { href: "/about", label: "About" },
+  { href: "/calculator", label: "Calculator" },
   { href: "/login", label: "Portal" },
 ];
+
+function MenuButton({ open, onClick }: { open: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={open ? "Close menu" : "Open menu"}
+      aria-expanded={open}
+      className="group relative grid size-11 place-items-center rounded-full border border-line/70 bg-surface/40 backdrop-blur-md transition-colors hover:bg-surface/70"
+    >
+      <span className="relative block h-4 w-5">
+        <motion.span
+          className="absolute left-0 top-[2px] block h-[1.6px] w-full rounded-full bg-ink"
+          style={{ transformOrigin: "center" }}
+          initial={false}
+          animate={open ? { y: 5.2, rotate: 45 } : { y: 0, rotate: 0 }}
+          transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+        />
+        <motion.span
+          className="absolute left-0 top-1/2 block h-[1.6px] w-full -translate-y-1/2 rounded-full bg-ink"
+          initial={false}
+          animate={open ? { opacity: 0, scaleX: 0.5 } : { opacity: 1, scaleX: 1 }}
+          transition={{ duration: 0.16 }}
+        />
+        <motion.span
+          className="absolute bottom-[2px] left-0 block h-[1.6px] w-full rounded-full bg-ink"
+          style={{ transformOrigin: "center" }}
+          initial={false}
+          animate={open ? { y: -5.2, rotate: -45 } : { y: 0, rotate: 0 }}
+          transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+        />
+      </span>
+    </button>
+  );
+}
 
 export function Navbar() {
   const pathname = usePathname();
@@ -23,100 +59,112 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
   const [lastPath, setLastPath] = useState(pathname);
 
-  // Close the mobile menu on navigation — adjust state during render (the
-  // React-recommended alternative to an effect for prop-derived resets).
   if (pathname !== lastPath) {
     setLastPath(pathname);
     setOpen(false);
   }
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Lock body scroll subtly? No — the panel is compact, keep the page usable.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4">
-      <nav
+    <header className="fixed inset-x-0 top-0 z-50">
+      <div
         className={cn(
-          "glass glass-air pointer-events-auto flex w-full max-w-[1180px] items-center gap-2 rounded-full py-2 pl-4 pr-2 transition-all duration-300",
-          scrolled && "glass-standard shadow-lg",
+          "transition-colors duration-300",
+          scrolled || open
+            ? "border-b border-line bg-bg/70 backdrop-blur-xl"
+            : "border-b border-transparent",
         )}
-        aria-label="Primary"
       >
-        <Link href="/" className="mr-1 flex items-center gap-2" aria-label="PRIMEFORM home">
-          <Logo className="size-7" />
-          <span className="font-heading text-lg font-extrabold tracking-tight">
-            PRIMEFORM
-          </span>
-        </Link>
-
-        <div className="mx-auto hidden items-center gap-1 lg:flex">
-          {links.map((l) => {
-            const active = pathname === l.href || pathname.startsWith(l.href + "/");
-            return (
-              <Link
-                key={l.href}
-                href={l.href}
-                className={cn(
-                  "rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
-                  active ? "text-ink" : "text-muted hover:text-ink",
-                )}
-              >
-                {l.label}
-              </Link>
-            );
-          })}
-        </div>
-
-        <div className="ml-auto flex items-center gap-2 lg:ml-0">
-          <ThemeSwitcher className="hidden sm:inline-flex" />
-          <Link href="/apply" className="btn btn-primary hidden h-10 min-h-0 px-5 py-0 text-sm sm:inline-flex">
-            Apply for Coaching
+        <div className="container-p relative flex h-16 items-center justify-between">
+          <Link href="/" className="flex items-center gap-2.5" aria-label="PRIMEFORM home">
+            <Logo className="size-8" />
+            <span className="font-heading text-lg font-extrabold tracking-tight">
+              PRIMEFORM
+            </span>
           </Link>
-          <button
-            type="button"
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            onClick={() => setOpen((o) => !o)}
-            className="grid size-10 place-items-center rounded-full text-ink lg:hidden"
-          >
-            {open ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
-        </div>
-      </nav>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.24 }}
-            className="glass glass-dense pointer-events-auto absolute inset-x-4 top-20 rounded-hero p-4 lg:hidden"
-          >
-            <div className="flex flex-col">
-              {links.map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  className="rounded-md px-3 py-3 text-base font-medium text-ink hover:bg-ink/5"
-                >
-                  {l.label}
-                </Link>
-              ))}
-              <div className="mt-2 flex items-center justify-between gap-3 border-t border-line pt-3">
-                <ThemeSwitcher />
-                <Link href="/apply" className="btn btn-primary flex-1">
-                  Apply for Coaching
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          <MenuButton open={open} onClick={() => setOpen((o) => !o)} />
+
+          {/* Compact content-sized dropdown, anchored under the button */}
+          <AnimatePresence>
+            {open && (
+              <motion.nav
+                aria-label="Primary"
+                initial={{ opacity: 0, y: -10, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                style={{ transformOrigin: "top right", background: "var(--surface)" }}
+                className="absolute right-[clamp(1.15rem,4vw,2.5rem)] top-[calc(100%+0.6rem)] w-64 rounded-3xl border border-line-strong p-2.5 shadow-2xl"
+              >
+                <ul className="flex flex-col">
+                  {links.map((l, i) => {
+                    const active = l.href === "/" ? pathname === "/" : pathname.startsWith(l.href);
+                    return (
+                      <motion.li
+                        key={l.href}
+                        initial={{ opacity: 0, x: 8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.04 + i * 0.035, duration: 0.2 }}
+                      >
+                        <Link
+                          href={l.href}
+                          className={cn(
+                            "flex items-center justify-between rounded-xl px-3.5 py-2.5 text-[0.95rem] font-medium transition-colors",
+                            active
+                              ? "bg-accent/12 text-accent"
+                              : "text-ink hover:bg-ink/5",
+                          )}
+                        >
+                          {l.label}
+                          {active && <span className="size-1.5 rounded-full bg-accent" />}
+                        </Link>
+                      </motion.li>
+                    );
+                  })}
+                </ul>
+
+                <div className="mt-2 border-t border-line pt-2.5">
+                  <Link
+                    href="/apply"
+                    className="btn btn-primary flex w-full"
+                  >
+                    Apply for Coaching
+                    <ArrowUpRight className="size-4" strokeWidth={2} />
+                  </Link>
+                  <div className="mt-2.5 flex items-center justify-between px-1.5">
+                    <span className="text-xs text-muted">Theme</span>
+                    <ThemeSwitcher />
+                  </div>
+                </div>
+              </motion.nav>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* Invisible click-catcher — closes on outside click, never dims the screen */}
+      {open && (
+        <button
+          aria-hidden
+          tabIndex={-1}
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 -z-10 cursor-default"
+        />
+      )}
     </header>
   );
 }
