@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Abstract coach composition — NO real photo. Warm layered gradients, grain,
- * soft shadow and a simple silhouette treatment, composed so real photography
- * can drop in later.
+ * Abstract coach composition — NO real photo. Layered gradients, grain, soft
+ * shadow and a simple bodybuilder silhouette (front double-biceps flex),
+ * composed so real photography can drop in later.
  */
 export function CoachPortrait({
   className,
@@ -23,10 +23,10 @@ export function CoachPortrait({
     >
       {/* PHOTO: cinematic coach portrait, warm side light — see VISUAL_DIRECTION §32 */}
 
-      {/* Abstract silhouette — head + shoulders */}
+      {/* Simple bodybuilder silhouette — front double-biceps flex */}
       <svg
-        viewBox="0 0 200 260"
-        className="absolute inset-x-0 bottom-0 h-[86%] w-full"
+        viewBox="0 0 240 240"
+        className="absolute inset-x-0 bottom-0 h-[94%] w-full"
         preserveAspectRatio="xMidYMax meet"
         aria-hidden
       >
@@ -36,17 +36,21 @@ export function CoachPortrait({
             <stop offset="100%" stopColor="color-mix(in oklab, var(--ink) 30%, transparent)" />
           </linearGradient>
         </defs>
+        {/* Head */}
+        <circle cx="120" cy="42" r="22" fill="url(#sil)" />
+        {/* Traps, flexed arms, lats and torso */}
         <path
-          d="M100 60c22 0 38 17 38 42 0 16-7 27-7 33 0 5 6 7 18 11 30 10 41 26 45 52 3 20 4 40 4 62H2c0-22 1-42 4-62 4-26 15-42 45-52 12-4 18-6 18-11 0-6-7-17-7-33 0-25 16-42 38-42Z"
+          d="M132 70 L162 66 Q186 48 206 66 Q211 42 195 22 L175 26 Q189 58 184 74 Q170 88 152 98 Q172 130 138 206 L132 214 L108 214 L102 206 Q68 130 88 98 Q70 88 56 74 Q51 58 65 26 L45 22 Q29 42 34 66 Q54 48 78 66 L108 70 Z"
           fill="url(#sil)"
         />
-        {/* Rim light on one edge */}
+        {/* Rim light along the raised right arm */}
         <path
-          d="M100 60c22 0 38 17 38 42 0 16-7 27-7 33"
+          d="M162 66 Q186 48 206 66 Q211 42 195 22"
           fill="none"
           stroke="var(--accent)"
           strokeWidth="2"
           strokeLinecap="round"
+          strokeLinejoin="round"
           opacity="0.55"
         />
       </svg>
