@@ -51,7 +51,7 @@ function MiniDashboard() {
         <div className="surface-card col-span-2 flex items-center gap-3 p-3.5">
           <div className="min-w-0 flex-1">
             <p className="text-[0.58rem] font-bold uppercase tracking-widest text-accent">
-              Today's Workout
+              Today&rsquo;s Workout
             </p>
             <p className="truncate text-sm font-bold">Upper Body Strength</p>
             <p className="tnum text-xs text-muted">6 exercises · 58 min</p>

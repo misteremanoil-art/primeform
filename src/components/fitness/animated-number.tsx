@@ -35,10 +35,9 @@ export function AnimatedNumber({
   const [display, setDisplay] = useState(value);
 
   useEffect(() => {
-    if (reduce || !inView) {
-      setDisplay(value);
-      return;
-    }
+    // display is initialised to `value`, so when we are not animating we simply
+    // leave it as-is (no synchronous setState in the effect body).
+    if (reduce || !inView) return;
     let raf = 0;
     let startTime = 0;
     const step = (now: number) => {

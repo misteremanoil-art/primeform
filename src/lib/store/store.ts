@@ -174,7 +174,7 @@ const notify = (
 
 export const usePrimeStore = create<PrimeState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       role: "visitor",
       ...buildSeed(),
       cookieConsent: null,

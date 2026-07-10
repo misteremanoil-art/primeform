@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { CalendarCheck, Clock, Globe, Phone, Video, MessageCircle, CalendarPlus, ArrowRight } from "lucide-react";
 import { GlassCard } from "@/components/ui/glass-card";
 import { Field, TextInput, TextArea } from "@/components/ui/form";
 import { usePrimeStore } from "@/lib/store/store";
 import { toast } from "@/lib/store/hooks";
+import { useMounted } from "@/lib/use-mounted";
 import { cn } from "@/lib/utils";
 
 const methods = [
@@ -29,7 +30,7 @@ interface Day {
 export function BookingForm() {
   const createBooking = usePrimeStore((s) => s.createBooking);
 
-  const [days, setDays] = useState<Day[]>([]);
+  const mounted = useMounted();
   const [method, setMethod] = useState("Google Meet");
   const [dayKey, setDayKey] = useState("");
   const [time, setTime] = useState("");
@@ -45,8 +46,10 @@ export function BookingForm() {
     iso: string;
   }>(null);
 
-  // Compute the next 7 days on the client only (avoids SSR/CSR date drift).
-  useEffect(() => {
+  // Compute the next 7 days on the client only (avoids SSR/CSR date drift) —
+  // done during render via useMemo, never via setState in an effect.
+  const days = useMemo<Day[]>(() => {
+    if (!mounted) return [];
     const out: Day[] = [];
     const base = new Date();
     for (let i = 1; i <= 7; i++) {
@@ -64,11 +67,12 @@ export function BookingForm() {
         iso: `${yyyy}${mm}${dd}`,
       });
     }
-    setDays(out);
-    setDayKey(out[0].key);
-  }, []);
+    return out;
+  }, [mounted]);
 
-  const selectedDay = days.find((d) => d.key === dayKey);
+  // Selected day defaults to the first available day until the user picks one.
+  const activeKey = dayKey || days[0]?.key || "";
+  const selectedDay = days.find((d) => d.key === activeKey);
 
   const confirm = () => {
     const e: Record<string, string> = {};
@@ -199,7 +203,7 @@ export function BookingForm() {
                 onClick={() => setDayKey(d.key)}
                 className={cn(
                   "flex shrink-0 flex-col items-center rounded-md border px-3.5 py-2.5 transition-colors",
-                  dayKey === d.key ? "border-accent bg-accent text-accent-ink" : "border-line text-muted hover:text-ink",
+                  activeKey === d.key ? "border-accent bg-accent text-accent-ink" : "border-line text-muted hover:text-ink",
                 )}
               >
                 <span className="text-[0.62rem] font-semibold uppercase">{d.weekday}</span>

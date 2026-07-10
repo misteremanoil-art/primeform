@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { create } from "zustand";
 import { usePrimeStore } from "./store";
 
@@ -8,20 +8,16 @@ import { usePrimeStore } from "./store";
  * Hydration guard — zustand `persist` + the App Router will mismatch if we
  * render persisted state on first paint. Gate store-driven UI behind this and
  * render skeletons until it returns true. Zero hydration warnings.
+ *
+ * Implemented with useSyncExternalStore so it subscribes to the persist API
+ * directly and never calls setState inside an effect.
  */
 export function useHasHydrated() {
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    // Already finished before this effect ran?
-    if (usePrimeStore.persist.hasHydrated()) setHydrated(true);
-    const unsub = usePrimeStore.persist.onFinishHydration(() =>
-      setHydrated(true),
-    );
-    return unsub;
-  }, []);
-
-  return hydrated;
+  return useSyncExternalStore(
+    (cb) => usePrimeStore.persist.onFinishHydration(cb),
+    () => usePrimeStore.persist.hasHydrated(),
+    () => false,
+  );
 }
 
 /* ---- Transient toast store (never persisted) ---- */
