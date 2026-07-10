@@ -325,6 +325,13 @@
     animation: hf-clock 12s linear infinite;
     will-change: transform;
   }
+  /* Logo accent line sweeping the plate ring like a clock hand (full loop 10s). */
+  .clock-hand {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: hf-clock 10s linear infinite;
+    will-change: transform;
+  }
   .text-balance {
     text-wrap: balance;
   }
