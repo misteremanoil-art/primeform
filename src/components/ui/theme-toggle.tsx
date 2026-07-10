@@ -19,9 +19,11 @@ export function ThemeToggle({ className }: { className?: string }) {
     <button
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
+      // Static label — never theme-dependent, so it can't cause a hydration mismatch.
+      aria-label="Toggle colour theme"
+      title="Toggle colour theme"
       className={cn(
-        "relative grid size-11 place-items-center overflow-hidden rounded-full border border-line/70 bg-surface/40 text-ink backdrop-blur-md transition-colors hover:bg-surface/70",
+        "relative grid size-9 place-items-center overflow-hidden text-ink transition-colors hover:text-accent",
         className,
       )}
     >

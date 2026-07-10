@@ -25,31 +25,31 @@ function MenuButton({ open, onClick }: { open: boolean; onClick: () => void }) {
       onClick={onClick}
       aria-label={open ? "Close menu" : "Open menu"}
       aria-expanded={open}
-      className="group relative flex h-11 items-center gap-2.5 rounded-full border border-line/70 bg-surface/40 pl-4 pr-4.5 backdrop-blur-md transition-colors hover:bg-surface/70"
+      className="group relative flex items-center gap-2.5 py-1.5 text-ink transition-colors hover:text-accent"
     >
+      <span className="text-sm font-semibold tracking-tight">Menu</span>
       <span className="relative block h-4 w-5">
         <motion.span
-          className="absolute left-0 top-[2px] block h-[1.6px] w-full rounded-full bg-ink"
+          className="absolute left-0 top-[2px] block h-[1.6px] w-full rounded-full bg-current"
           style={{ transformOrigin: "center" }}
           initial={false}
           animate={open ? { y: 5.2, rotate: 45 } : { y: 0, rotate: 0 }}
           transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
         />
         <motion.span
-          className="absolute left-0 top-1/2 block h-[1.6px] w-full -translate-y-1/2 rounded-full bg-ink"
+          className="absolute left-0 top-1/2 block h-[1.6px] w-full -translate-y-1/2 rounded-full bg-current"
           initial={false}
           animate={open ? { opacity: 0, scaleX: 0.5 } : { opacity: 1, scaleX: 1 }}
           transition={{ duration: 0.16 }}
         />
         <motion.span
-          className="absolute bottom-[2px] left-0 block h-[1.6px] w-full rounded-full bg-ink"
+          className="absolute bottom-[2px] left-0 block h-[1.6px] w-full rounded-full bg-current"
           style={{ transformOrigin: "center" }}
           initial={false}
           animate={open ? { y: -5.2, rotate: -45 } : { y: 0, rotate: 0 }}
           transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
         />
       </span>
-      <span className="text-sm font-semibold tracking-tight">Menu</span>
     </button>
   );
 }
@@ -97,7 +97,7 @@ export function Navbar() {
             </span>
           </Link>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <ThemeToggle />
             <MenuButton open={open} onClick={() => setOpen((o) => !o)} />
           </div>
