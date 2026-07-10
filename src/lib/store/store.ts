@@ -137,6 +137,9 @@ interface PrimeState {
 
   updateBookingStatus: (id: string, status: BookingStatus) => void;
 
+  updateClientNote: (id: string, note: string) => void;
+  updateClientStatus: (id: string, status: Client["status"]) => void;
+
   saveProgram: (program: ProgramTemplate) => void;
 
   markNotificationsRead: (audience: "client" | "coach") => void;
@@ -497,6 +500,20 @@ export const usePrimeStore = create<PrimeState>()(
         set((state) => ({
           bookings: state.bookings.map((b) =>
             b.id === id ? { ...b, status } : b,
+          ),
+        })),
+
+      updateClientNote: (id, note) =>
+        set((state) => ({
+          clients: state.clients.map((c) =>
+            c.id === id ? { ...c, privateNote: note } : c,
+          ),
+        })),
+
+      updateClientStatus: (id, status) =>
+        set((state) => ({
+          clients: state.clients.map((c) =>
+            c.id === id ? { ...c, status } : c,
           ),
         })),
 
