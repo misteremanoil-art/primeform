@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ThemeSwitcher } from "@/components/ui/theme-switcher";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Logo } from "@/components/site/logo";
 
 const links = [
@@ -25,7 +25,7 @@ function MenuButton({ open, onClick }: { open: boolean; onClick: () => void }) {
       onClick={onClick}
       aria-label={open ? "Close menu" : "Open menu"}
       aria-expanded={open}
-      className="group relative grid size-11 place-items-center rounded-full border border-line/70 bg-surface/40 backdrop-blur-md transition-colors hover:bg-surface/70"
+      className="group relative flex h-11 items-center gap-2.5 rounded-full border border-line/70 bg-surface/40 pl-4 pr-4.5 backdrop-blur-md transition-colors hover:bg-surface/70"
     >
       <span className="relative block h-4 w-5">
         <motion.span
@@ -49,6 +49,7 @@ function MenuButton({ open, onClick }: { open: boolean; onClick: () => void }) {
           transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
         />
       </span>
+      <span className="text-sm font-semibold tracking-tight">Menu</span>
     </button>
   );
 }
@@ -96,7 +97,10 @@ export function Navbar() {
             </span>
           </Link>
 
-          <MenuButton open={open} onClick={() => setOpen((o) => !o)} />
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <MenuButton open={open} onClick={() => setOpen((o) => !o)} />
+          </div>
 
           {/* Compact content-sized dropdown, anchored under the button */}
           <AnimatePresence>
@@ -138,17 +142,10 @@ export function Navbar() {
                 </ul>
 
                 <div className="mt-2 border-t border-line pt-2.5">
-                  <Link
-                    href="/apply"
-                    className="btn btn-primary flex w-full"
-                  >
+                  <Link href="/apply" className="btn btn-primary flex w-full">
                     Apply for Coaching
                     <ArrowUpRight className="size-4" strokeWidth={2} />
                   </Link>
-                  <div className="mt-2.5 flex items-center justify-between px-1.5">
-                    <span className="text-xs text-muted">Theme</span>
-                    <ThemeSwitcher />
-                  </div>
                 </div>
               </motion.nav>
             )}
