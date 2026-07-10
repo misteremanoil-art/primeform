@@ -108,7 +108,7 @@ export function CheckinForm() {
     <GlassCard variant="solid" className="mx-auto max-w-2xl p-6 sm:p-8">
       <div className="space-y-7">
         <Field label="Rate your overall week (1–10)">
-          <ScorePicker value={scores.overall} onChange={(v) => setScores({ ...scores, overall: v })} />
+          <ScorePicker value={scores.overall} onChange={(v) => setScores((s) => ({ ...s, overall: v }))} />
         </Field>
 
         <div>
@@ -134,16 +134,16 @@ export function CheckinForm() {
         </div>
 
         <Field label="How closely did you follow your nutrition targets? (1–10)">
-          <ScorePicker value={scores.nutrition} onChange={(v) => setScores({ ...scores, nutrition: v })} />
+          <ScorePicker value={scores.nutrition} onChange={(v) => setScores((s) => ({ ...s, nutrition: v }))} />
         </Field>
         <Field label="Average daily energy (1–10)">
-          <ScorePicker value={scores.energy} onChange={(v) => setScores({ ...scores, energy: v })} />
+          <ScorePicker value={scores.energy} onChange={(v) => setScores((s) => ({ ...s, energy: v }))} />
         </Field>
         <Field label="Average sleep quality (1–10)">
-          <ScorePicker value={scores.sleep} onChange={(v) => setScores({ ...scores, sleep: v })} />
+          <ScorePicker value={scores.sleep} onChange={(v) => setScores((s) => ({ ...s, sleep: v }))} />
         </Field>
         <Field label="Average stress (1–10)">
-          <ScorePicker value={scores.stress} onChange={(v) => setScores({ ...scores, stress: v })} />
+          <ScorePicker value={scores.stress} onChange={(v) => setScores((s) => ({ ...s, stress: v }))} />
         </Field>
 
         <Field label="What went well this week?">
