@@ -150,24 +150,34 @@ export const FluidParticlesBackground = ({
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
-    // Size the drawing buffer to the element's own box so it works both as a
-    // full-screen background and as a layer inside a shorter section.
-    const resizeCanvas = () => {
-      const parent = canvas.parentElement;
-      canvas.width = parent?.clientWidth || window.innerWidth;
-      canvas.height = parent?.clientHeight || window.innerHeight;
+    let particles: Particle[] = [];
+    const scatter = (w: number, h: number) => {
+      particles = Array.from({ length: particleCount }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        size: Math.random() * (sizeMax - sizeMin) + sizeMin,
+        velocity: { x: 0, y: 0 },
+        life: Math.random() * 100,
+        maxLife: 100 + Math.random() * 50,
+      }));
     };
 
-    resizeCanvas();
+    // Size the drawing buffer to the element's own box so it works both as a
+    // full-screen background and as a layer inside a shorter section. Re-scatter
+    // the particles the first time we get a real size (e.g. the tab was loaded
+    // in the background, where the viewport reports 0×0 until it is shown).
+    const applySize = () => {
+      const parent = canvas.parentElement;
+      const w = parent?.clientWidth || window.innerWidth || 0;
+      const h = parent?.clientHeight || window.innerHeight || 0;
+      if (w === canvas.width && h === canvas.height) return;
+      const wasInvalid = canvas.width === 0 || canvas.height === 0;
+      canvas.width = w;
+      canvas.height = h;
+      if (w > 0 && h > 0 && (wasInvalid || particles.length === 0)) scatter(w, h);
+    };
 
-    const particles: Particle[] = Array.from({ length: particleCount }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      size: Math.random() * (sizeMax - sizeMin) + sizeMin,
-      velocity: { x: 0, y: 0 },
-      life: Math.random() * 100,
-      maxLife: 100 + Math.random() * 50,
-    }));
+    applySize();
 
     const animate = (now: number) => {
       raf = requestAnimationFrame(animate);
@@ -220,32 +230,44 @@ export const FluidParticlesBackground = ({
       frame += 1;
     };
 
+    const single = () => {
+      if (canvas.width === 0) return;
+      const isDark = document.documentElement.classList.contains("dark");
+      const scheme = isDark ? COLOR_SCHEME.dark : COLOR_SCHEME.light;
+      ctx.fillStyle = scheme.trail;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      for (const particle of particles) {
+        ctx.fillStyle = `rgba(${scheme.particle}, 0.1)`;
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    };
+
     let raf = 0;
     if (prefersReduced) {
       // Paint a single static frame, then stop (respect reduced motion).
       last = -Infinity;
-      const single = () => {
-        const isDark = document.documentElement.classList.contains("dark");
-        const scheme = isDark ? COLOR_SCHEME.dark : COLOR_SCHEME.light;
-        ctx.fillStyle = scheme.trail;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        for (const particle of particles) {
-          ctx.fillStyle = `rgba(${scheme.particle}, 0.1)`;
-          ctx.beginPath();
-          ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      };
       single();
     } else {
       raf = requestAnimationFrame(animate);
     }
 
-    const handleResize = () => resizeCanvas();
-    window.addEventListener("resize", handleResize);
+    // Re-measure whenever the container gets (or changes) its real size — this
+    // covers window resizes and the hidden→visible transition (0×0 → viewport).
+    const onSize = () => {
+      applySize();
+      if (prefersReduced) single();
+    };
+    const ro =
+      typeof ResizeObserver !== "undefined" ? new ResizeObserver(onSize) : null;
+    if (ro && canvas.parentElement) ro.observe(canvas.parentElement);
+    window.addEventListener("resize", onSize);
+
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("resize", handleResize);
+      ro?.disconnect();
+      window.removeEventListener("resize", onSize);
     };
   }, [particleCount, noiseIntensity, speed, flowSpeed, sizeMin, sizeMax, noise]);
 

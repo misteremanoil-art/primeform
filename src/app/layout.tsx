@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Atmosphere } from "@/components/site/atmosphere";
 import { CookieBanner } from "@/components/site/cookie-banner";
 import { Toaster } from "@/components/ui/toaster";
+import { FluidParticlesBackground } from "@/components/ui/fluid-particles-background";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -75,6 +76,15 @@ export default function RootLayout({
           disableTransitionOnChange={false}
         >
           <Atmosphere />
+          {/* Fluid particle field — one fixed backdrop behind the whole site */}
+          <FluidParticlesBackground
+            particleCount={600}
+            noiseIntensity={0.009}
+            speed={4.5}
+            flowSpeed={0.0035}
+            particleSize={{ min: 0.6, max: 2.4 }}
+            className="pointer-events-none fixed inset-0 z-0 bg-transparent"
+          />
           <div className="relative z-10 flex min-h-dvh flex-col">{children}</div>
           <CookieBanner />
           <Toaster />
