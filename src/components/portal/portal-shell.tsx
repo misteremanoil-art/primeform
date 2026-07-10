@@ -128,6 +128,13 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
             {nav.find((n) => isActive(n.href))?.label ?? "Portal"}
           </p>
           <div className="flex items-center gap-1.5">
+            <button
+              onClick={exit}
+              className="inline-flex rounded-full p-2 text-muted transition-colors hover:text-ink lg:hidden"
+              aria-label="Exit demo and return to homepage"
+            >
+              <LogOut className="size-4.5" strokeWidth={1.8} />
+            </button>
             <NotificationBell audience="client" />
             <button onClick={handleReset} className="hidden rounded-full p-2 text-muted hover:text-ink lg:inline-flex" aria-label="Reset demo data">
               <RotateCcw className="size-4.5" strokeWidth={1.8} />
