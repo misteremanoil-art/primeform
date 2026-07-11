@@ -91,7 +91,7 @@ export function Navbar() {
       >
         <div className="container-p relative flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5" aria-label="PRIMEFORM home">
-            <Logo className="size-8" />
+            <Logo className="size-8" animate />
             <span className="font-heading text-lg font-extrabold tracking-tight">
               PRIMEFORM
             </span>

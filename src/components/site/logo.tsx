@@ -1,11 +1,20 @@
 import { cn } from "@/lib/utils";
 
 /**
- * PRIMEFORM mark — a weight-plate progress ring. Outer plate, an orange
+ * PRIMEFORM mark — a weight-plate progress ring. Outer plate, a black
  * progress arc, fine tick marks and a metallic centre. Referenced discreetly,
  * never literal. Reused as the favicon.
+ *
+ * When `animate` is set, the black arc sweeps the ring like a clock hand
+ * (same cadence as the hero halo) so the mark reads as time flowing.
  */
-export function Logo({ className }: { className?: string }) {
+export function Logo({
+  className,
+  animate = false,
+}: {
+  className?: string;
+  animate?: boolean;
+}) {
   return (
     <svg
       viewBox="0 0 48 48"
@@ -25,6 +34,7 @@ export function Logo({ className }: { className?: string }) {
         strokeDasharray="132"
         strokeDashoffset="34"
         transform="rotate(-90 24 24)"
+        className={cn(animate && "clock-hand")}
       />
       {Array.from({ length: 12 }).map((_, i) => {
         const a = (i / 12) * Math.PI * 2;
