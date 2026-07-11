@@ -39,7 +39,7 @@ export function Footer() {
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div className="max-w-sm">
             <div className="flex items-center gap-2">
-              <Logo className="size-8" animate />
+              <Logo className="size-8" />
               <span className="font-heading text-xl font-extrabold tracking-tight">
                 PRIMEFORM
               </span>

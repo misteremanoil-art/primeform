@@ -325,14 +325,6 @@
     animation: hf-clock 12s linear infinite;
     will-change: transform;
   }
-  /* Logo accent arc sweeping the plate ring like a clock hand.
-     Same cadence as the hero halo: 360° every 12s → 5 clock-seconds per real second. */
-  .clock-hand {
-    transform-box: fill-box;
-    transform-origin: center;
-    animation: hf-clock 12s linear infinite;
-    will-change: transform;
-  }
   .text-balance {
     text-wrap: balance;
   }
