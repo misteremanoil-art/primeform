@@ -1,12 +1,12 @@
 import { cn } from "@/lib/utils";
 
 /**
- * PRIMEFORM mark — a weight-plate progress ring. Outer plate, a black
- * progress arc, fine tick marks and a metallic centre. Referenced discreetly,
- * never literal. Reused as the favicon.
+ * PRIMEFORM mark — a weight-plate ring. A faint gold track, a short black
+ * marker riding on it, fine tick marks and a metallic centre. Referenced
+ * discreetly, never literal. Reused as the favicon.
  *
- * When `animate` is set, the black arc sweeps the ring like a clock hand
- * (same cadence as the hero halo) so the mark reads as time flowing.
+ * When `animate` is set, the black marker travels around the ring like a clock
+ * hand (same cadence as the hero halo) so the mark reads as time flowing.
  */
 export function Logo({
   className,
@@ -24,6 +24,7 @@ export function Logo({
       fill="none"
     >
       <circle cx="24" cy="24" r="21" stroke="var(--gold)" strokeWidth="2" opacity="0.5" />
+      {/* Short black marker riding the ring — orbits the full circle when animated. */}
       <circle
         cx="24"
         cy="24"
@@ -31,8 +32,7 @@ export function Logo({
         stroke="var(--accent)"
         strokeWidth="3.5"
         strokeLinecap="round"
-        strokeDasharray="132"
-        strokeDashoffset="34"
+        strokeDasharray="26 132"
         transform="rotate(-90 24 24)"
         className={cn(animate && "clock-hand")}
       />
