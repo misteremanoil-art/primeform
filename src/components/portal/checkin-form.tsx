@@ -8,6 +8,62 @@ import { Field, TextArea, inputCls } from "@/components/ui/form";
 import { usePrimeStore } from "@/lib/store/store";
 import { toast } from "@/lib/store/hooks";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
+
+const copy = {
+  en: {
+    submittedHeading: "Check-in submitted.",
+    submittedBody: "Your coach has been notified and will review your answers.",
+    coachFeedback: "Coach feedback",
+    backToDashboard: "Back to dashboard",
+    required: "This field is required.",
+    overall: "Rate your overall week (1–10)",
+    workoutsQuestion: "How many workouts did you complete?",
+    nutrition: "How closely did you follow your nutrition targets? (1–10)",
+    energy: "Average daily energy (1–10)",
+    sleep: "Average sleep quality (1–10)",
+    stress: "Average stress (1–10)",
+    wentWell: "What went well this week?",
+    challenge: "What was the biggest challenge?",
+    changes: "Is there anything you want changed in your programme?",
+    discomfortQuestion: "Do you have any pain or discomfort?",
+    yesNo: { No: "No", Yes: "Yes" },
+    discomfortPlaceholder: "Describe where you feel discomfort and when it occurs.",
+    photoUpload: "Photo upload",
+    photoFront: "Front",
+    photoSide: "Side",
+    photoBack: "Back",
+    submit: "Submit Check-In",
+    submittedToastTitle: "Check-in submitted.",
+    submittedToastBody: "Your coach has been notified.",
+  },
+  ro: {
+    submittedHeading: "Check-in trimis.",
+    submittedBody: "Antrenorul tău a fost notificat și îți va analiza răspunsurile.",
+    coachFeedback: "Feedback de la antrenor",
+    backToDashboard: "Înapoi la panou",
+    required: "Acest câmp este obligatoriu.",
+    overall: "Cum evaluezi săptămâna în ansamblu? (1–10)",
+    workoutsQuestion: "Câte antrenamente ai finalizat?",
+    nutrition: "Cât de fidel ți-ai respectat obiectivele nutriționale? (1–10)",
+    energy: "Energia medie zilnică (1–10)",
+    sleep: "Calitatea medie a somnului (1–10)",
+    stress: "Nivelul mediu de stres (1–10)",
+    wentWell: "Ce a mers bine săptămâna aceasta?",
+    challenge: "Care a fost cea mai mare provocare?",
+    changes: "Vrei să schimbăm ceva în programul tău?",
+    discomfortQuestion: "Ai vreo durere sau disconfort?",
+    yesNo: { No: "Nu", Yes: "Da" },
+    discomfortPlaceholder: "Descrie unde simți disconfortul și când apare.",
+    photoUpload: "Încărcare fotografii",
+    photoFront: "Față",
+    photoSide: "Lateral",
+    photoBack: "Spate",
+    submit: "Trimite check-in-ul",
+    submittedToastTitle: "Check-in trimis.",
+    submittedToastBody: "Antrenorul tău a fost notificat.",
+  },
+} as const;
 
 function ScorePicker({
   value,
@@ -43,6 +99,8 @@ const workoutCounts = ["0", "1", "2", "3", "4+"];
 export function CheckinForm() {
   const submitCheckIn = usePrimeStore((s) => s.submitCheckIn);
   const existing = usePrimeStore((s) => s.checkIns.find((c) => c.clientId === "alex"));
+  const { lang } = useI18n();
+  const t = copy[lang];
 
   const [scores, setScores] = useState({ overall: 0, nutrition: 0, energy: 0, sleep: 0, stress: 0 });
   const [workouts, setWorkouts] = useState("");
@@ -60,21 +118,19 @@ export function CheckinForm() {
         <span className="mx-auto grid size-14 place-items-center rounded-full bg-olive/15 text-olive">
           <CheckCircle2 className="size-8" strokeWidth={1.7} />
         </span>
-        <h2 className="mt-6 text-2xl font-bold">Check-in submitted.</h2>
-        <p className="mt-3 text-muted">
-          Your coach has been notified and will review your answers.
-        </p>
+        <h2 className="mt-6 text-2xl font-bold">{t.submittedHeading}</h2>
+        <p className="mt-3 text-muted">{t.submittedBody}</p>
         {existing?.coachResponse && (
           <div className="surface-card mt-6 p-5 text-left">
             <p className="text-[0.62rem] font-bold uppercase tracking-widest text-accent">
-              Coach feedback
+              {t.coachFeedback}
             </p>
             <p className="mt-2 text-sm leading-relaxed">{existing.coachResponse}</p>
           </div>
         )}
         <div className="mt-7 flex justify-center gap-3">
           <Link href="/portal" className="btn btn-primary">
-            Back to dashboard
+            {t.backToDashboard}
             <ArrowRight className="size-4" strokeWidth={2} />
           </Link>
         </div>
@@ -84,7 +140,7 @@ export function CheckinForm() {
 
   const submit = () => {
     if (!scores.overall || !workouts || !scores.energy || !scores.sleep || (discomfort === "Yes" && !discomfortDetail.trim())) {
-      setError("This field is required.");
+      setError(t.required);
       return;
     }
     setError(null);
@@ -101,19 +157,19 @@ export function CheckinForm() {
       discomfort: discomfort === "Yes" ? "Yes" : "No",
       discomfortDetail,
     });
-    toast("Check-in submitted.", "Your coach has been notified.", "success");
+    toast(t.submittedToastTitle, t.submittedToastBody, "success");
   };
 
   return (
     <GlassCard variant="solid" className="mx-auto max-w-2xl p-6 sm:p-8">
       <div className="space-y-7">
-        <Field label="Rate your overall week (1–10)">
+        <Field label={t.overall}>
           <ScorePicker value={scores.overall} onChange={(v) => setScores((s) => ({ ...s, overall: v }))} />
         </Field>
 
         <div>
           <p className="text-[0.72rem] font-semibold uppercase tracking-wide text-muted">
-            How many workouts did you complete?
+            {t.workoutsQuestion}
           </p>
           <div className="mt-1.5 flex gap-2">
             {workoutCounts.map((w) => (
@@ -133,32 +189,32 @@ export function CheckinForm() {
           </div>
         </div>
 
-        <Field label="How closely did you follow your nutrition targets? (1–10)">
+        <Field label={t.nutrition}>
           <ScorePicker value={scores.nutrition} onChange={(v) => setScores((s) => ({ ...s, nutrition: v }))} />
         </Field>
-        <Field label="Average daily energy (1–10)">
+        <Field label={t.energy}>
           <ScorePicker value={scores.energy} onChange={(v) => setScores((s) => ({ ...s, energy: v }))} />
         </Field>
-        <Field label="Average sleep quality (1–10)">
+        <Field label={t.sleep}>
           <ScorePicker value={scores.sleep} onChange={(v) => setScores((s) => ({ ...s, sleep: v }))} />
         </Field>
-        <Field label="Average stress (1–10)">
+        <Field label={t.stress}>
           <ScorePicker value={scores.stress} onChange={(v) => setScores((s) => ({ ...s, stress: v }))} />
         </Field>
 
-        <Field label="What went well this week?">
+        <Field label={t.wentWell}>
           <TextArea value={text.wentWell} onChange={(e) => setText({ ...text, wentWell: e.target.value })} />
         </Field>
-        <Field label="What was the biggest challenge?">
+        <Field label={t.challenge}>
           <TextArea value={text.challenge} onChange={(e) => setText({ ...text, challenge: e.target.value })} />
         </Field>
-        <Field label="Is there anything you want changed in your programme?">
+        <Field label={t.changes}>
           <TextArea value={text.changes} onChange={(e) => setText({ ...text, changes: e.target.value })} />
         </Field>
 
         <div>
           <p className="text-[0.72rem] font-semibold uppercase tracking-wide text-muted">
-            Do you have any pain or discomfort?
+            {t.discomfortQuestion}
           </p>
           <div className="mt-1.5 flex gap-2">
             {(["No", "Yes"] as const).map((o) => (
@@ -172,7 +228,7 @@ export function CheckinForm() {
                   discomfort === o ? "border-accent bg-accent/8 text-ink" : "border-line text-muted hover:text-ink",
                 )}
               >
-                {o}
+                {t.yesNo[o]}
               </button>
             ))}
           </div>
@@ -181,19 +237,23 @@ export function CheckinForm() {
               <TextArea
                 value={discomfortDetail}
                 onChange={(e) => setDiscomfortDetail(e.target.value)}
-                placeholder="Describe where you feel discomfort and when it occurs."
+                placeholder={t.discomfortPlaceholder}
               />
             </div>
           )}
         </div>
 
         <div>
-          <p className="text-[0.72rem] font-semibold uppercase tracking-wide text-muted">Photo upload</p>
+          <p className="text-[0.72rem] font-semibold uppercase tracking-wide text-muted">{t.photoUpload}</p>
           <div className="mt-1.5 grid grid-cols-3 gap-2">
-            {["Front", "Side", "Back"].map((p) => (
-              <label key={p} className={cn(inputCls, "flex cursor-pointer flex-col items-center gap-1 py-4 text-xs text-muted")}>
+            {[
+              { key: "Front", label: t.photoFront },
+              { key: "Side", label: t.photoSide },
+              { key: "Back", label: t.photoBack },
+            ].map((p) => (
+              <label key={p.key} className={cn(inputCls, "flex cursor-pointer flex-col items-center gap-1 py-4 text-xs text-muted")}>
                 <Camera className="size-4" strokeWidth={1.7} />
-                {p}
+                {p.label}
                 <input type="file" accept="image/*" className="hidden" />
               </label>
             ))}
@@ -203,7 +263,7 @@ export function CheckinForm() {
         {error && <p className="text-sm font-medium text-danger">{error}</p>}
 
         <button onClick={submit} className="btn btn-primary w-full">
-          Submit Check-In
+          {t.submit}
         </button>
       </div>
     </GlassCard>

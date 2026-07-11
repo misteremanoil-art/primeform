@@ -2,6 +2,12 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
+
+const copy = {
+  en: { close: "Close" },
+  ro: { close: "Închide" },
+} as const;
 
 export function Drawer({
   open,
@@ -14,6 +20,8 @@ export function Drawer({
   title: string;
   children: React.ReactNode;
 }) {
+  const { lang } = useI18n();
+  const t = copy[lang];
   return (
     <AnimatePresence>
       {open && (
@@ -34,7 +42,7 @@ export function Drawer({
           >
             <div className="flex items-center justify-between border-b border-line p-5">
               <h3 className="text-lg font-bold">{title}</h3>
-              <button onClick={onClose} aria-label="Close" className="text-faint hover:text-ink">
+              <button onClick={onClose} aria-label={t.close} className="text-faint hover:text-ink">
                 <X className="size-5" />
               </button>
             </div>

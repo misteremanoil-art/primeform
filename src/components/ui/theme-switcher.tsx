@@ -4,16 +4,20 @@ import { useTheme } from "next-themes";
 import { Monitor, Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useMounted } from "@/lib/use-mounted";
+import { useI18n } from "@/lib/i18n";
 
 const options = [
-  { value: "system", label: "System", Icon: Monitor },
-  { value: "light", label: "Light", Icon: Sun },
-  { value: "dark", label: "Dark", Icon: Moon },
+  { value: "system", label: { en: "System theme", ro: "Temă sistem" }, Icon: Monitor },
+  { value: "light", label: { en: "Light theme", ro: "Temă luminoasă" }, Icon: Sun },
+  { value: "dark", label: { en: "Dark theme", ro: "Temă întunecată" }, Icon: Moon },
 ] as const;
+
+const groupLabel = { en: "Colour theme", ro: "Temă de culoare" } as const;
 
 export function ThemeSwitcher({ className }: { className?: string }) {
   const { theme, setTheme } = useTheme();
   const mounted = useMounted();
+  const { lang } = useI18n();
 
   return (
     <div
@@ -22,7 +26,7 @@ export function ThemeSwitcher({ className }: { className?: string }) {
         className,
       )}
       role="group"
-      aria-label="Colour theme"
+      aria-label={groupLabel[lang]}
     >
       {options.map(({ value, label, Icon }) => {
         const active = mounted && theme === value;
@@ -30,7 +34,7 @@ export function ThemeSwitcher({ className }: { className?: string }) {
           <button
             key={value}
             type="button"
-            aria-label={`${label} theme`}
+            aria-label={label[lang]}
             aria-pressed={active}
             onClick={() => setTheme(value)}
             className={cn(

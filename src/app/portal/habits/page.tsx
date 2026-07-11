@@ -7,6 +7,7 @@ import { PlateProgressRing } from "@/components/fitness/plate-progress-ring";
 import { usePrimeStore } from "@/lib/store/store";
 import { toast } from "@/lib/store/hooks";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 const meta: Record<string, { icon: typeof Footprints; step: number }> = {
   "h-steps": { icon: Footprints, step: 250 },
@@ -18,21 +19,44 @@ const meta: Record<string, { icon: typeof Footprints; step: number }> = {
 
 const fmt = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
 
+const copy = {
+  en: {
+    title: "Daily habits",
+    intro:
+      "Small actions completed consistently create the conditions for better progress.",
+    today: "Today",
+    days: (done: number, total: number) => `${done} of ${total} days`,
+    setAria: (label: string) => `Set ${label}`,
+    saved: "Today's habits have been updated.",
+    save: "Save Today's Habits",
+  },
+  ro: {
+    title: "Obiceiuri zilnice",
+    intro:
+      "Acțiunile mici, făcute constant, creează condițiile pentru un progres mai bun.",
+    today: "Astăzi",
+    days: (done: number, total: number) => `${done} din ${total} zile`,
+    setAria: (label: string) => `Setează ${label}`,
+    saved: "Obiceiurile de azi au fost actualizate.",
+    save: "Salvează obiceiurile de azi",
+  },
+} as const;
+
 export default function HabitsPage() {
   const habits = usePrimeStore((s) => s.habits);
   const updateHabit = usePrimeStore((s) => s.updateHabit);
   const saveHabits = usePrimeStore((s) => s.saveHabits);
+  const { lang } = useI18n();
+  const t = copy[lang];
 
   const save = () => {
     saveHabits();
-    toast("Today's habits have been updated.", undefined, "success");
+    toast(t.saved, undefined, "success");
   };
 
   return (
     <div className="mx-auto max-w-3xl">
-      <PortalHeader title="Daily habits">
-        Small actions completed consistently create the conditions for better progress.
-      </PortalHeader>
+      <PortalHeader title={t.title}>{t.intro}</PortalHeader>
 
       <div className="space-y-4">
         {habits.map((h) => {
@@ -54,7 +78,7 @@ export default function HabitsPage() {
                     <p className="font-semibold">{h.label}</p>
                   </div>
                   <p className="tnum mt-0.5 text-sm text-muted">
-                    Today: {fmt(h.today)} / {fmt(h.target)}{" "}
+                    {t.today}: {fmt(h.today)} / {fmt(h.target)}{" "}
                     {h.unit !== "steps" ? h.unit : ""}
                   </p>
                   {/* Weekly completion dots */}
@@ -69,7 +93,7 @@ export default function HabitsPage() {
                       />
                     ))}
                     <span className="ml-1.5 text-xs text-faint">
-                      {h.weeklyCompleted} of {h.weeklyTotal} days
+                      {t.days(h.weeklyCompleted, h.weeklyTotal)}
                     </span>
                   </div>
                 </div>
@@ -82,7 +106,7 @@ export default function HabitsPage() {
                 value={h.today}
                 onChange={(e) => updateHabit(h.id, Number(e.target.value))}
                 className="mt-4 w-full accent-[var(--accent)]"
-                aria-label={`Set ${h.targetLabel}`}
+                aria-label={t.setAria(h.targetLabel)}
               />
             </GlassCard>
           );
@@ -90,7 +114,7 @@ export default function HabitsPage() {
       </div>
 
       <button onClick={save} className="btn btn-primary mt-6 w-full sm:w-auto">
-        Save Today&rsquo;s Habits
+        {t.save}
       </button>
     </div>
   );

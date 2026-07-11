@@ -3,6 +3,12 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
+
+const copy = {
+  en: { title: "New Personal Record" },
+  ro: { title: "Record personal nou" },
+} as const;
 
 /**
  * Gold-reflective "NEW PERSONAL RECORD" card with a single gold pulse on
@@ -18,6 +24,7 @@ export function PRBadge({
   className?: string;
 }) {
   const reduce = useReducedMotion();
+  const { lang } = useI18n();
   return (
     <motion.div
       initial={reduce ? false : { boxShadow: "0 0 0 0 rgba(233,188,106,0)" }}
@@ -57,7 +64,7 @@ export function PRBadge({
         </span>
         <div className="min-w-0">
           <p className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[color:var(--gold)]">
-            New Personal Record
+            {copy[lang].title}
           </p>
           <p className="mt-0.5 truncate text-sm font-semibold text-ink">{exercise}</p>
           <p className="tnum text-xs text-muted">{detail}</p>

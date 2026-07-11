@@ -6,6 +6,7 @@ import { GlassCard } from "@/components/ui/glass-card";
 import { DemoDisclosure } from "@/components/fitness/demo-disclosure";
 import { usePrimeStore } from "@/lib/store/store";
 import { coachKpis } from "@/lib/store/seed";
+import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 const toneDot: Record<string, string> = {
@@ -15,27 +16,56 @@ const toneDot: Record<string, string> = {
   gold: "bg-gold",
 };
 
+const copy = {
+  en: {
+    greeting: "Good afternoon, Daniel.",
+    intro: "You have three client actions and two consultations requiring attention today.",
+    activeClients: "Active Clients",
+    newLeads: "New Leads",
+    consultationsThisWeek: "Consultations This Week",
+    pendingCheckIns: "Pending Check-Ins",
+    workoutCompletion: "Workout Completion",
+    monthlyRevenue: "Monthly Demo Revenue",
+    disclosure: "Financial and performance data are fictional.",
+    attention: "Needs your attention",
+  },
+  ro: {
+    greeting: "Bună ziua, Daniel.",
+    intro: "Ai trei acțiuni de client și două consultații care necesită atenție astăzi.",
+    activeClients: "Clienți activi",
+    newLeads: "Leaduri noi",
+    consultationsThisWeek: "Consultații săptămâna aceasta",
+    pendingCheckIns: "Check-in-uri în așteptare",
+    workoutCompletion: "Rată de finalizare antrenamente",
+    monthlyRevenue: "Venit lunar demo",
+    disclosure: "Datele financiare și de performanță sunt fictive.",
+    attention: "Necesită atenția ta",
+  },
+} as const;
+
 export default function CoachOverview() {
+  const { lang } = useI18n();
+  const t = copy[lang];
   const attention = usePrimeStore((s) => s.attention);
   const leads = usePrimeStore((s) => s.leads);
 
   const newLeads = leads.filter((l) => l.status === "New").length;
 
   const kpis = [
-    { icon: Users, label: "Active Clients", value: coachKpis.activeClients },
-    { icon: Inbox, label: "New Leads", value: Math.max(coachKpis.newLeadsOverview, newLeads) },
-    { icon: CalendarDays, label: "Consultations This Week", value: coachKpis.consultationsThisWeek },
-    { icon: ClipboardCheck, label: "Pending Check-Ins", value: coachKpis.pendingCheckIns },
-    { icon: Activity, label: "Workout Completion", value: `${coachKpis.workoutCompletion}%` },
-    { icon: Wallet, label: "Monthly Demo Revenue", value: `€${coachKpis.monthlyRevenue.toLocaleString("en-GB")}` },
+    { icon: Users, label: t.activeClients, value: coachKpis.activeClients },
+    { icon: Inbox, label: t.newLeads, value: Math.max(coachKpis.newLeadsOverview, newLeads) },
+    { icon: CalendarDays, label: t.consultationsThisWeek, value: coachKpis.consultationsThisWeek },
+    { icon: ClipboardCheck, label: t.pendingCheckIns, value: coachKpis.pendingCheckIns },
+    { icon: Activity, label: t.workoutCompletion, value: `${coachKpis.workoutCompletion}%` },
+    { icon: Wallet, label: t.monthlyRevenue, value: `€${coachKpis.monthlyRevenue.toLocaleString("en-GB")}` },
   ];
 
   return (
     <div className="mx-auto max-w-6xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold sm:text-3xl">Good afternoon, Daniel.</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">{t.greeting}</h1>
         <p className="mt-1.5 text-muted">
-          You have three client actions and two consultations requiring attention today.
+          {t.intro}
         </p>
       </div>
 
@@ -49,10 +79,10 @@ export default function CoachOverview() {
           </GlassCard>
         ))}
       </div>
-      <DemoDisclosure className="mt-3">Financial and performance data are fictional.</DemoDisclosure>
+      <DemoDisclosure className="mt-3">{t.disclosure}</DemoDisclosure>
 
       {/* Attention feed */}
-      <h2 className="mt-8 text-lg font-bold">Needs your attention</h2>
+      <h2 className="mt-8 text-lg font-bold">{t.attention}</h2>
       <div className="mt-4 space-y-2.5">
         {attention.map((a) => (
           <GlassCard

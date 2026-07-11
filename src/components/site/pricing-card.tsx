@@ -60,7 +60,7 @@ export function PricingCard({
               <span className="mt-0.5 grid size-4.5 shrink-0 place-items-center rounded-full bg-olive/15 text-olive">
                 <Check className="size-3" strokeWidth={2.5} />
               </span>
-              <span className="capitalize">{f}</span>
+              <span className="first-letter:uppercase">{f}</span>
             </li>
           ))}
         </ul>

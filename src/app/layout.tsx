@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { LanguageProvider } from "@/lib/i18n";
 import { Atmosphere } from "@/components/site/atmosphere";
 import { CookieBanner } from "@/components/site/cookie-banner";
 import { Toaster } from "@/components/ui/toaster";
@@ -85,9 +87,13 @@ export default function RootLayout({
             particleSize={{ min: 0.6, max: 2.4 }}
             className="pointer-events-none fixed inset-0 z-0 bg-transparent"
           />
-          <div className="relative z-10 flex min-h-dvh flex-col">{children}</div>
-          <CookieBanner />
-          <Toaster />
+          <Suspense fallback={null}>
+            <LanguageProvider>
+              <div className="relative z-10 flex min-h-dvh flex-col">{children}</div>
+              <CookieBanner />
+              <Toaster />
+            </LanguageProvider>
+          </Suspense>
         </ThemeProvider>
       </body>
     </html>

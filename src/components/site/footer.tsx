@@ -1,38 +1,71 @@
+"use client";
+
 import Link from "next/link";
 import { Camera, MessageCircle } from "lucide-react";
 import { Logo } from "@/components/site/logo";
+import { useI18n } from "@/lib/i18n";
 
 const columns = [
   {
-    title: "Coaching",
+    title: { en: "Coaching", ro: "Coaching" },
     links: [
-      { label: "Online Coaching", href: "/coaching" },
-      { label: "Personal Training", href: "/personal-training" },
-      { label: "Hybrid Coaching", href: "/coaching#hybrid" },
-      { label: "Apply", href: "/apply" },
+      { label: { en: "Online Coaching", ro: "Coaching online" }, href: "/coaching" },
+      { label: { en: "Personal Training", ro: "Antrenament personal" }, href: "/personal-training" },
+      { label: { en: "Hybrid Coaching", ro: "Coaching hibrid" }, href: "/coaching#hybrid" },
+      { label: { en: "Apply", ro: "Aplică" }, href: "/apply" },
     ],
   },
   {
-    title: "Explore",
+    title: { en: "Explore", ro: "Explorează" },
     links: [
-      { label: "Results", href: "/results" },
-      { label: "Calorie Calculator", href: "/calculator" },
-      { label: "About", href: "/about" },
-      { label: "Client Login", href: "/login" },
+      { label: { en: "Results", ro: "Rezultate" }, href: "/results" },
+      { label: { en: "Calorie Calculator", ro: "Calculator calorii" }, href: "/calculator" },
+      { label: { en: "About", ro: "Despre" }, href: "/about" },
+      { label: { en: "Client Login", ro: "Autentificare client" }, href: "/login" },
     ],
   },
   {
-    title: "Legal",
+    title: { en: "Legal", ro: "Legal" },
     links: [
-      { label: "Privacy Policy", href: "/legal" },
-      { label: "Terms and Conditions", href: "/legal" },
-      { label: "Cookie Policy", href: "/legal" },
-      { label: "Health Disclaimer", href: "/health-disclaimer" },
+      { label: { en: "Privacy Policy", ro: "Politica de confidențialitate" }, href: "/legal" },
+      { label: { en: "Terms and Conditions", ro: "Termeni și condiții" }, href: "/legal" },
+      { label: { en: "Cookie Policy", ro: "Politica de cookie-uri" }, href: "/legal" },
+      { label: { en: "Health Disclaimer", ro: "Disclaimer medical" }, href: "/health-disclaimer" },
     ],
   },
-];
+] as const;
+
+const copy = {
+  en: {
+    tagline:
+      "Personalised fitness coaching built around clear training, flexible nutrition and measurable progress.",
+    contact: "Contact",
+    location: "Bucharest, Romania",
+    disclaimer1:
+      "PRIMEFORM is a fictional business created by Emanoil Studio to demonstrate a complete fitness coaching website and client management platform.",
+    disclaimer2:
+      "All names, images, statistics, qualifications, testimonials, prices and results are fictional.",
+    rights: "PRIMEFORM Coaching · Demo",
+    credit: "Designed and developed by Emanoil Studio",
+  },
+  ro: {
+    tagline:
+      "Coaching fitness personalizat, construit în jurul unui antrenament clar, al unei nutriții flexibile și al unui progres măsurabil.",
+    contact: "Contact",
+    location: "București, România",
+    disclaimer1:
+      "PRIMEFORM este o afacere fictivă creată de Emanoil Studio pentru a demonstra un site complet de coaching fitness și o platformă de management al clienților.",
+    disclaimer2:
+      "Toate numele, imaginile, statisticile, calificările, testimonialele, prețurile și rezultatele sunt fictive.",
+    rights: "PRIMEFORM Coaching · Demo",
+    credit: "Design și dezvoltare de Emanoil Studio",
+  },
+} as const;
 
 export function Footer() {
+  const { lang } = useI18n();
+  const t = copy[lang];
+
   return (
     <footer className="relative mt-auto border-t border-line">
       <div className="container-p pb-28 pt-16 sm:pb-16">
@@ -44,10 +77,7 @@ export function Footer() {
                 PRIMEFORM
               </span>
             </div>
-            <p className="mt-4 text-sm leading-relaxed text-muted">
-              Personalised fitness coaching built around clear training, flexible
-              nutrition and measurable progress.
-            </p>
+            <p className="mt-4 text-sm leading-relaxed text-muted">{t.tagline}</p>
             <div className="mt-5 flex items-center gap-3 text-sm text-muted">
               <a
                 href="#"
@@ -67,16 +97,16 @@ export function Footer() {
           </div>
 
           {columns.map((col) => (
-            <nav key={col.title} aria-label={col.title}>
-              <p className="eyebrow">{col.title}</p>
+            <nav key={col.title.en} aria-label={col.title[lang]}>
+              <p className="eyebrow">{col.title[lang]}</p>
               <ul className="mt-4 space-y-2.5">
                 {col.links.map((l) => (
-                  <li key={l.label}>
+                  <li key={l.label.en}>
                     <Link
                       href={l.href}
                       className="text-sm text-muted transition-colors hover:text-ink"
                     >
-                      {l.label}
+                      {l.label[lang]}
                     </Link>
                   </li>
                 ))}
@@ -87,32 +117,25 @@ export function Footer() {
 
         <div className="mt-10 grid gap-6 border-t border-line pt-8 text-sm text-muted sm:grid-cols-[1.2fr_1fr]">
           <div>
-            <p className="font-medium text-ink">Contact</p>
+            <p className="font-medium text-ink">{t.contact}</p>
             <p className="mt-2">hello@primeform.demo</p>
-            <p>Bucharest, Romania</p>
+            <p>{t.location}</p>
           </div>
           <div className="rounded-card border border-line bg-surface/50 p-4 text-xs leading-relaxed">
-            <p>
-              PRIMEFORM is a fictional business created by Emanoil Studio to
-              demonstrate a complete fitness coaching website and client management
-              platform.
-            </p>
-            <p className="mt-2">
-              All names, images, statistics, qualifications, testimonials, prices and
-              results are fictional.
-            </p>
+            <p>{t.disclaimer1}</p>
+            <p className="mt-2">{t.disclaimer2}</p>
           </div>
         </div>
 
         <div className="mt-8 flex flex-col items-start justify-between gap-3 border-t border-line pt-6 text-sm text-muted sm:flex-row sm:items-center">
-          <p>© {new Date().getFullYear()} PRIMEFORM Coaching · Demo</p>
+          <p>© {new Date().getFullYear()} {t.rights}</p>
           <a
             href="https://emanoil.studio"
             target="_blank"
             rel="noopener noreferrer"
             className="font-medium text-ink transition-colors hover:text-accent"
           >
-            Designed and developed by Emanoil Studio
+            {t.credit}
           </a>
         </div>
       </div>

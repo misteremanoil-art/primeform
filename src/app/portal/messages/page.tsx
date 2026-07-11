@@ -5,11 +5,33 @@ import { Send, MessageSquare } from "lucide-react";
 import { GlassCard } from "@/components/ui/glass-card";
 import { usePrimeStore } from "@/lib/store/store";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
+
+const copy = {
+  en: {
+    coach: "Daniel — Your Coach",
+    online: "Online",
+    empty: "No messages yet.",
+    emptyHint: "Start a conversation with your coach.",
+    placeholder: "Write a message…",
+    send: "Send",
+  },
+  ro: {
+    coach: "Daniel — Antrenorul tău",
+    online: "Online",
+    empty: "Niciun mesaj încă.",
+    emptyHint: "Începe o conversație cu antrenorul tău.",
+    placeholder: "Scrie un mesaj…",
+    send: "Trimite",
+  },
+} as const;
 
 export default function MessagesPage() {
   const messages = usePrimeStore((s) => s.messages);
   const sendMessage = usePrimeStore((s) => s.sendMessage);
   const [draft, setDraft] = useState("");
+  const { lang } = useI18n();
+  const t = copy[lang];
 
   const send = () => {
     const t = draft.trim();
@@ -29,8 +51,8 @@ export default function MessagesPage() {
           D
         </span>
         <div>
-          <p className="font-bold">Daniel — Your Coach</p>
-          <p className="text-xs text-olive">● Online</p>
+          <p className="font-bold">{t.coach}</p>
+          <p className="text-xs text-olive">● {t.online}</p>
         </div>
       </div>
 
@@ -40,8 +62,8 @@ export default function MessagesPage() {
           <div className="grid flex-1 place-items-center text-center">
             <div>
               <MessageSquare className="mx-auto size-8 text-faint" strokeWidth={1.5} />
-              <p className="mt-3 font-semibold">No messages yet.</p>
-              <p className="text-sm text-muted">Start a conversation with your coach.</p>
+              <p className="mt-3 font-semibold">{t.empty}</p>
+              <p className="text-sm text-muted">{t.emptyHint}</p>
             </div>
           </div>
         ) : (
@@ -73,14 +95,14 @@ export default function MessagesPage() {
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && send()}
-            placeholder="Write a message…"
+            placeholder={t.placeholder}
             className="min-w-0 flex-1 rounded-full border border-line bg-surface px-4 py-2.5 text-sm outline-none focus:border-accent"
           />
           <button
             onClick={send}
             disabled={!draft.trim()}
             className="grid size-11 shrink-0 place-items-center rounded-full bg-accent text-accent-ink transition-opacity disabled:opacity-40"
-            aria-label="Send"
+            aria-label={t.send}
           >
             <Send className="size-4.5" strokeWidth={1.9} />
           </button>

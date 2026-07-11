@@ -4,11 +4,31 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { usePrimeStore } from "@/lib/store/store";
 import { useHasHydrated } from "@/lib/store/hooks";
+import { useI18n } from "@/lib/i18n";
 
-const categories = ["Essential", "Analytics", "Marketing"];
+const copy = {
+  en: {
+    aria: "Cookie preferences",
+    body: "We use essential cookies to operate this demo and optional analytics cookies to understand how it is used.",
+    categories: ["Essential", "Analytics", "Marketing"],
+    accept: "Accept All",
+    reject: "Reject Optional",
+    manage: "Manage Preferences",
+  },
+  ro: {
+    aria: "Preferințe cookie-uri",
+    body: "Folosim cookie-uri esențiale pentru a opera acest demo și cookie-uri opționale de analiză pentru a înțelege cum este utilizat.",
+    categories: ["Esențiale", "Analiză", "Marketing"],
+    accept: "Acceptă tot",
+    reject: "Refuză opționalele",
+    manage: "Gestionează preferințele",
+  },
+} as const;
 
 export function CookieBanner() {
   const hydrated = useHasHydrated();
+  const { lang } = useI18n();
+  const t = copy[lang];
   const consent = usePrimeStore((s) => s.cookieConsent);
   const setConsent = usePrimeStore((s) => s.setCookieConsent);
   const [expanded, setExpanded] = useState(false);
@@ -25,17 +45,14 @@ export function CookieBanner() {
           transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
           className="fixed inset-x-3 bottom-3 z-[90] mx-auto max-w-2xl sm:inset-x-6"
           role="dialog"
-          aria-label="Cookie preferences"
+          aria-label={t.aria}
         >
           <div className="glass glass-dense rounded-hero p-5">
-            <p className="text-sm leading-relaxed text-ink">
-              We use essential cookies to operate this demo and optional analytics
-              cookies to understand how it is used.
-            </p>
+            <p className="text-sm leading-relaxed text-ink">{t.body}</p>
 
             {expanded && (
               <ul className="mt-3 flex flex-wrap gap-2">
-                {categories.map((c) => (
+                {t.categories.map((c) => (
                   <li key={c} className="pill text-muted">
                     {c}
                   </li>
@@ -48,20 +65,20 @@ export function CookieBanner() {
                 onClick={() => setConsent("accepted")}
                 className="btn btn-primary h-10 min-h-0 px-4 py-0 text-sm"
               >
-                Accept All
+                {t.accept}
               </button>
               <button
                 onClick={() => setConsent("rejected")}
                 className="btn btn-secondary h-10 min-h-0 px-4 py-0 text-sm"
               >
-                Reject Optional
+                {t.reject}
               </button>
               <button
                 onClick={() => setExpanded((e) => !e)}
                 className="btn btn-ghost h-10 min-h-0 px-3 py-0 text-sm"
                 aria-expanded={expanded}
               >
-                Manage Preferences
+                {t.manage}
               </button>
             </div>
           </div>

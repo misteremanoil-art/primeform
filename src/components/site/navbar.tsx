@@ -7,27 +7,42 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { LanguageToggle } from "@/components/ui/language-toggle";
 import { Logo } from "@/components/site/logo";
+import { useI18n } from "@/lib/i18n";
 
 const links = [
-  { href: "/coaching", label: "Coaching" },
-  { href: "/personal-training", label: "Personal Training" },
-  { href: "/results", label: "Results" },
-  { href: "/about", label: "About" },
-  { href: "/calculator", label: "Calculator" },
-  { href: "/login", label: "Portal" },
+  { href: "/coaching", label: { en: "Coaching", ro: "Coaching" } },
+  { href: "/personal-training", label: { en: "Personal Training", ro: "Antrenament personal" } },
+  { href: "/results", label: { en: "Results", ro: "Rezultate" } },
+  { href: "/about", label: { en: "About", ro: "Despre" } },
+  { href: "/calculator", label: { en: "Calculator", ro: "Calculator" } },
+  { href: "/login", label: { en: "Portal", ro: "Portal" } },
 ];
 
-function MenuButton({ open, onClick }: { open: boolean; onClick: () => void }) {
+const navCopy = {
+  en: { menu: "Menu", open: "Open menu", close: "Close menu", apply: "Apply for Coaching", home: "PRIMEFORM home" },
+  ro: { menu: "Meniu", open: "Deschide meniul", close: "Închide meniul", apply: "Aplică pentru coaching", home: "Acasă PRIMEFORM" },
+} as const;
+
+function MenuButton({
+  open,
+  onClick,
+  labels,
+}: {
+  open: boolean;
+  onClick: () => void;
+  labels: (typeof navCopy)[keyof typeof navCopy];
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
-      aria-label={open ? "Close menu" : "Open menu"}
+      aria-label={open ? labels.close : labels.open}
       aria-expanded={open}
       className="group relative flex items-center gap-2.5 py-1.5 text-ink transition-colors hover:text-accent"
     >
-      <span className="text-sm font-semibold tracking-tight">Menu</span>
+      <span className="text-sm font-semibold tracking-tight">{labels.menu}</span>
       <span className="relative block h-4 w-5">
         <motion.span
           className="absolute left-0 top-[2px] block h-[1.6px] w-full rounded-full bg-current"
@@ -56,6 +71,8 @@ function MenuButton({ open, onClick }: { open: boolean; onClick: () => void }) {
 
 export function Navbar() {
   const pathname = usePathname();
+  const { lang } = useI18n();
+  const t = navCopy[lang];
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [lastPath, setLastPath] = useState(pathname);
@@ -90,16 +107,17 @@ export function Navbar() {
         )}
       >
         <div className="container-p relative flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5" aria-label="PRIMEFORM home">
+          <Link href="/" className="flex items-center gap-2.5" aria-label={t.home}>
             <Logo className="size-8" />
             <span className="font-heading text-lg font-extrabold tracking-tight">
               PRIMEFORM
             </span>
           </Link>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3.5">
+            <LanguageToggle />
             <ThemeToggle />
-            <MenuButton open={open} onClick={() => setOpen((o) => !o)} />
+            <MenuButton open={open} onClick={() => setOpen((o) => !o)} labels={t} />
           </div>
 
           {/* Compact content-sized dropdown, anchored under the button */}
@@ -133,7 +151,7 @@ export function Navbar() {
                               : "text-ink hover:bg-ink/5",
                           )}
                         >
-                          {l.label}
+                          {l.label[lang]}
                           {active && <span className="size-1.5 rounded-full bg-accent" />}
                         </Link>
                       </motion.li>
@@ -143,7 +161,7 @@ export function Navbar() {
 
                 <div className="mt-2 border-t border-line pt-2.5">
                   <Link href="/apply" className="btn btn-primary flex w-full">
-                    Apply for Coaching
+                    {t.apply}
                     <ArrowUpRight className="size-4" strokeWidth={2} />
                   </Link>
                 </div>

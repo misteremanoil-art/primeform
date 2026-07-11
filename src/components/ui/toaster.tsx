@@ -3,10 +3,17 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, Info, Sparkles, X } from "lucide-react";
 import { useToastStore } from "@/lib/store/hooks";
+import { useI18n } from "@/lib/i18n";
+
+const copy = {
+  en: { dismiss: "Dismiss notification" },
+  ro: { dismiss: "Închide notificarea" },
+} as const;
 
 export function Toaster() {
   const toasts = useToastStore((s) => s.toasts);
   const dismiss = useToastStore((s) => s.dismiss);
+  const { lang } = useI18n();
 
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-4 z-[100] flex flex-col items-center gap-2 px-4 sm:bottom-6">
@@ -39,7 +46,7 @@ export function Toaster() {
                 )}
               </div>
               <button
-                aria-label="Dismiss notification"
+                aria-label={copy[lang].dismiss}
                 onClick={() => dismiss(t.id)}
                 className="-mr-1 -mt-1 rounded-full p-1 text-faint transition-colors hover:text-ink"
               >

@@ -4,9 +4,23 @@ import { useState } from "react";
 import { SearchX } from "lucide-react";
 import { ResultCard } from "@/components/home/result-card";
 import { caseStudies, resultFilters } from "@/lib/content/case-studies";
+import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
+const copy = {
+  en: {
+    noResults: "No results match the selected filters.",
+    reset: "Reset Filters",
+  },
+  ro: {
+    noResults: "Niciun rezultat nu corespunde filtrelor selectate.",
+    reset: "Resetează filtrele",
+  },
+} as const;
+
 export function ResultsGrid() {
+  const { lang } = useI18n();
+  const t = copy[lang];
   const [active, setActive] = useState<string>("All Results");
 
   const visible =
@@ -20,17 +34,17 @@ export function ResultsGrid() {
       <div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
         {resultFilters.map((f) => (
           <button
-            key={f}
-            onClick={() => setActive(f)}
-            aria-pressed={active === f}
+            key={f.key}
+            onClick={() => setActive(f.key)}
+            aria-pressed={active === f.key}
             className={cn(
               "shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors",
-              active === f
+              active === f.key
                 ? "border-transparent bg-accent text-accent-ink"
                 : "border-line text-muted hover:text-ink",
             )}
           >
-            {f}
+            {f.label[lang]}
           </button>
         ))}
       </div>
@@ -44,12 +58,12 @@ export function ResultsGrid() {
       ) : (
         <div className="mt-8 grid place-items-center rounded-section border border-dashed border-line py-20 text-center">
           <SearchX className="size-8 text-faint" strokeWidth={1.5} />
-          <p className="mt-4 text-lg font-semibold">No results match the selected filters.</p>
+          <p className="mt-4 text-lg font-semibold">{t.noResults}</p>
           <button
             onClick={() => setActive("All Results")}
             className="btn btn-secondary mt-5 h-10 min-h-0 px-4 py-0 text-sm"
           >
-            Reset Filters
+            {t.reset}
           </button>
         </div>
       )}

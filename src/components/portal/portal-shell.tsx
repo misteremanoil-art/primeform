@@ -20,18 +20,45 @@ import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { NotificationBell } from "@/components/portal/notification-bell";
 import { Logo } from "@/components/site/logo";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
+import { LanguageToggle } from "@/components/ui/language-toggle";
 
 const nav = [
-  { href: "/portal", label: "Dashboard", icon: Home },
-  { href: "/portal/workout", label: "Workout", icon: Dumbbell },
-  { href: "/portal/progress", label: "Progress", icon: TrendingUp },
-  { href: "/portal/checkin", label: "Check-in", icon: ClipboardCheck },
-  { href: "/portal/nutrition", label: "Nutrition", icon: Utensils },
-  { href: "/portal/habits", label: "Habits", icon: ListChecks },
-  { href: "/portal/messages", label: "Messages", icon: MessageSquare },
-];
+  { href: "/portal", label: { en: "Dashboard", ro: "Panou" }, icon: Home },
+  { href: "/portal/workout", label: { en: "Workout", ro: "Antrenament" }, icon: Dumbbell },
+  { href: "/portal/progress", label: { en: "Progress", ro: "Progres" }, icon: TrendingUp },
+  { href: "/portal/checkin", label: { en: "Check-in", ro: "Check-in" }, icon: ClipboardCheck },
+  { href: "/portal/nutrition", label: { en: "Nutrition", ro: "Nutriție" }, icon: Utensils },
+  { href: "/portal/habits", label: { en: "Habits", ro: "Obiceiuri" }, icon: ListChecks },
+  { href: "/portal/messages", label: { en: "Messages", ro: "Mesaje" }, icon: MessageSquare },
+] as const;
 
 const bottomNav = [nav[0], nav[1], nav[2], nav[3], nav[6]];
+
+const copy = {
+  en: {
+    loading: "Loading your portal…",
+    plan: "12-Week Fat Loss · Week 7 of 12",
+    resetDemo: "Reset demo data",
+    exitDemo: "Exit demo",
+    portal: "Portal",
+    exitAria: "Exit demo and return to homepage",
+    resetAria: "Reset demo data",
+    resetToastTitle: "Demo data reset",
+    resetToastBody: "Your portal is back to the seed state.",
+  },
+  ro: {
+    loading: "Se încarcă portalul…",
+    plan: "Slăbire în 12 săptămâni · Săptămâna 7 din 12",
+    resetDemo: "Resetează datele demo",
+    exitDemo: "Ieși din demo",
+    portal: "Portal",
+    exitAria: "Ieși din demo și revino la pagina principală",
+    resetAria: "Resetează datele demo",
+    resetToastTitle: "Date demo resetate",
+    resetToastBody: "Portalul a revenit la starea inițială.",
+  },
+} as const;
 
 export function PortalShell({ children }: { children: React.ReactNode }) {
   const hydrated = useHasHydrated();
@@ -40,6 +67,8 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
   const resetDemo = usePrimeStore((s) => s.resetDemo);
   const router = useRouter();
   const pathname = usePathname();
+  const { lang } = useI18n();
+  const t = copy[lang];
 
   useEffect(() => {
     if (hydrated && role !== "client") router.replace("/login");
@@ -50,7 +79,7 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
       <div className="grid min-h-dvh place-items-center">
         <div className="flex flex-col items-center gap-3 text-muted">
           <Logo className="size-10 animate-pulse" />
-          <p className="text-sm">Loading your portal…</p>
+          <p className="text-sm">{t.loading}</p>
         </div>
       </div>
     );
@@ -61,7 +90,7 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
 
   const handleReset = () => {
     resetDemo();
-    toast("Demo data reset", "Your portal is back to the seed state.", "default");
+    toast(t.resetToastTitle, t.resetToastBody, "default");
   };
 
   const exit = () => {
@@ -80,7 +109,7 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
 
         <div className="mt-3 rounded-card border border-line bg-surface p-3">
           <p className="text-sm font-semibold">Alex Popescu</p>
-          <p className="text-xs text-muted">12-Week Fat Loss · Week 7 of 12</p>
+          <p className="text-xs text-muted">{t.plan}</p>
         </div>
 
         <nav className="mt-4 flex-1 space-y-1">
@@ -96,7 +125,7 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
               )}
             >
               <item.icon className="size-4.5" strokeWidth={1.8} />
-              {item.label}
+              {item.label[lang]}
             </Link>
           ))}
         </nav>
@@ -104,11 +133,11 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
         <div className="space-y-1 border-t border-line pt-3">
           <button onClick={handleReset} className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-ink/5 hover:text-ink">
             <RotateCcw className="size-4.5" strokeWidth={1.8} />
-            Reset demo data
+            {t.resetDemo}
           </button>
           <button onClick={exit} className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-ink/5 hover:text-ink">
             <LogOut className="size-4.5" strokeWidth={1.8} />
-            Exit demo
+            {t.exitDemo}
           </button>
           <div className="px-3 pt-2">
             <ThemeSwitcher />
@@ -125,18 +154,19 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
             <span className="font-heading text-base font-extrabold">PRIMEFORM</span>
           </div>
           <p className="hidden text-sm font-medium text-muted lg:block">
-            {nav.find((n) => isActive(n.href))?.label ?? "Portal"}
+            {nav.find((n) => isActive(n.href))?.label[lang] ?? t.portal}
           </p>
           <div className="flex items-center gap-1.5">
             <button
               onClick={exit}
               className="inline-flex rounded-full p-2 text-muted transition-colors hover:text-ink lg:hidden"
-              aria-label="Exit demo and return to homepage"
+              aria-label={t.exitAria}
             >
               <LogOut className="size-4.5" strokeWidth={1.8} />
             </button>
+            <LanguageToggle className="mr-1" />
             <NotificationBell audience="client" />
-            <button onClick={handleReset} className="hidden rounded-full p-2 text-muted hover:text-ink lg:inline-flex" aria-label="Reset demo data">
+            <button onClick={handleReset} className="hidden rounded-full p-2 text-muted hover:text-ink lg:inline-flex" aria-label={t.resetAria}>
               <RotateCcw className="size-4.5" strokeWidth={1.8} />
             </button>
             <div className="lg:hidden">
@@ -160,7 +190,7 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
             )}
           >
             <item.icon className="size-5" strokeWidth={1.8} />
-            {item.label}
+            {item.label[lang]}
           </Link>
         ))}
       </nav>

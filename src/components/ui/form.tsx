@@ -1,5 +1,10 @@
+"use client";
+
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
+
+const optionalLabel = { en: "(optional)", ro: "(opțional)" } as const;
 
 export const inputCls =
   "w-full rounded-md border border-line bg-surface px-3.5 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-faint focus:border-accent";
@@ -19,11 +24,12 @@ export function Field({
   children: React.ReactNode;
   className?: string;
 }) {
+  const { lang } = useI18n();
   return (
     <label className={cn("block", className)}>
       <span className={labelCls}>
         {label}
-        {optional && <span className="ml-1 lowercase text-faint">(optional)</span>}
+        {optional && <span className="ml-1 lowercase text-faint">{optionalLabel[lang]}</span>}
       </span>
       <div className="mt-1.5">{children}</div>
       {error && <p className="mt-1.5 text-xs font-medium text-danger">{error}</p>}

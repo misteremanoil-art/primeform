@@ -1,4 +1,8 @@
+"use client";
+
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
+import type { Lang } from "@/lib/i18n";
 
 type Tone = "accent" | "olive" | "clay" | "gold" | "danger" | "muted";
 
@@ -20,7 +24,8 @@ const dotColor: Record<Tone, string> = {
   muted: "bg-faint",
 };
 
-// Semantic mapping — consistent meaning across both themes.
+// Semantic mapping — consistent meaning across both themes. Keyed on the
+// canonical English status so callers can keep passing English values.
 const statusTone: Record<string, Tone> = {
   // positive / done
   Won: "olive",
@@ -49,6 +54,33 @@ const statusTone: Record<string, Tone> = {
   "No Show": "danger",
 };
 
+// Localized display labels. Tone is still resolved from the English key above,
+// so the colour semantics survive translation. Unknown statuses fall back to
+// the raw string.
+const statusLabel: Record<string, Record<Lang, string>> = {
+  Won: { en: "Won", ro: "Câștigat" },
+  Active: { en: "Active", ro: "Activ" },
+  Completed: { en: "Completed", ro: "Finalizat" },
+  Reviewed: { en: "Reviewed", ro: "Revizuit" },
+  Submitted: { en: "Submitted", ro: "Trimis" },
+  New: { en: "New", ro: "Nou" },
+  Booked: { en: "Booked", ro: "Rezervat" },
+  Scheduled: { en: "Scheduled", ro: "Programat" },
+  Qualified: { en: "Qualified", ro: "Calificat" },
+  "Needs Review": { en: "Needs Review", ro: "Necesită revizuire" },
+  "Needs Attention": { en: "Needs Attention", ro: "Necesită atenție" },
+  Overdue: { en: "Overdue", ro: "Întârziat" },
+  Contacted: { en: "Contacted", ro: "Contactat" },
+  Upcoming: { en: "Upcoming", ro: "Urmează" },
+  Pending: { en: "Pending", ro: "În așteptare" },
+  Rescheduled: { en: "Rescheduled", ro: "Reprogramat" },
+  Paused: { en: "Paused", ro: "Pe pauză" },
+  Archived: { en: "Archived", ro: "Arhivat" },
+  Lost: { en: "Lost", ro: "Pierdut" },
+  Cancelled: { en: "Cancelled", ro: "Anulat" },
+  "No Show": { en: "No Show", ro: "Neprezentat" },
+};
+
 export function StatusPill({
   status,
   tone,
@@ -60,11 +92,13 @@ export function StatusPill({
   className?: string;
   dot?: boolean;
 }) {
+  const { lang } = useI18n();
   const t = tone ?? statusTone[status] ?? "muted";
+  const label = statusLabel[status]?.[lang] ?? status;
   return (
     <span className={cn("pill", toneClass[t], className)}>
       {dot && <span className={cn("size-1.5 rounded-full", dotColor[t])} />}
-      {status}
+      {label}
     </span>
   );
 }

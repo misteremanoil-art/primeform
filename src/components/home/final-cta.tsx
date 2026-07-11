@@ -1,10 +1,31 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { GlassCard } from "@/components/ui/glass-card";
 import { Reveal } from "@/components/ui/reveal";
 import { TrainingHalo } from "@/components/fitness/training-halo";
+import { useI18n } from "@/lib/i18n";
+
+const copy = {
+  en: {
+    heading: "A better plan starts with a better understanding of where you are now.",
+    lead: "Complete the short application and tell us what you are working towards.",
+    ctaPrimary: "Apply for Coaching",
+    ctaSecondary: "Calculate Your Daily Calories",
+  },
+  ro: {
+    heading: "Un plan mai bun începe cu o înțelegere mai bună a locului în care te afli acum.",
+    lead: "Completează aplicația scurtă și spune-ne către ce obiectiv lucrezi.",
+    ctaPrimary: "Aplică pentru coaching",
+    ctaSecondary: "Calculează-ți caloriile zilnice",
+  },
+} as const;
 
 export function FinalCta() {
+  const { lang } = useI18n();
+  const t = copy[lang];
+
   return (
     <section className="container-p pb-20">
       <Reveal>
@@ -27,18 +48,18 @@ export function FinalCta() {
 
           <div className="relative mx-auto max-w-2xl">
             <h2 className="text-[clamp(1.9rem,4.5vw,3rem)] leading-[1.08]">
-              A better plan starts with a better understanding of where you are now.
+              {t.heading}
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-lg text-muted">
-              Complete the short application and tell us what you are working towards.
+              {t.lead}
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link href="/apply" className="btn btn-primary">
-                Apply for Coaching
+                {t.ctaPrimary}
                 <ArrowRight className="size-4" strokeWidth={2} />
               </Link>
               <Link href="/calculator" className="btn btn-secondary">
-                Calculate Your Daily Calories
+                {t.ctaSecondary}
               </Link>
             </div>
           </div>

@@ -3,10 +3,17 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowRight } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
+
+const copy = {
+  en: { cta: "Start Your Application" },
+  ro: { cta: "Începe aplicația" },
+} as const;
 
 /** Public-site mobile sticky CTA — never shown in the portal or coach dashboard. */
 export function MobileCta() {
   const pathname = usePathname();
+  const { lang } = useI18n();
   // Hide on the application flow itself.
   if (pathname.startsWith("/apply")) return null;
 
@@ -16,7 +23,7 @@ export function MobileCta() {
         href="/apply"
         className="btn btn-primary pointer-events-auto flex w-full shadow-xl"
       >
-        Start Your Application
+        {copy[lang].cta}
         <ArrowRight className="size-4" strokeWidth={2} />
       </Link>
     </div>

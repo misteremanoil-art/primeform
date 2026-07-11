@@ -1,9 +1,55 @@
+"use client";
+
 import { Dumbbell, Utensils, ClipboardCheck } from "lucide-react";
 import { GlassCard } from "@/components/ui/glass-card";
 import { Reveal } from "@/components/ui/reveal";
 import { SetTracker } from "@/components/fitness/set-tracker";
 import { SectionHeader } from "./section-header";
 import { seedNutrition } from "@/lib/store/seed";
+import { useI18n } from "@/lib/i18n";
+
+const copy = {
+  en: {
+    eyebrow: "The PRIMEFORM system",
+    title: "Everything you need to train, improve and stay consistent.",
+    trainingEyebrow: "Personalised training",
+    trainingTitle: "Training built around you",
+    trainingBody:
+      "Your programme is based on your goal, experience, available equipment, schedule and recovery. Each exercise includes clear instructions, target repetitions, rest periods and progression guidance.",
+    setsLine: "4 sets · 8–10 reps · 90s rest",
+    exerciseProgression: "Exercise progression",
+    nutritionEyebrow: "Nutrition",
+    nutritionTitle: "Nutrition that fits real life",
+    proteinLabel: "protein",
+    nutritionBody:
+      "Calorie and macronutrient targets, meal structure guidance and practical adjustments without removing every food you enjoy.",
+    reviewEyebrow: "Weekly review",
+    reviewTitle: "Weekly accountability",
+    energy: "Energy",
+    sleep: "Sleep",
+    reviewBody: "The plan changes when your data shows that it needs to change.",
+  },
+  ro: {
+    eyebrow: "Sistemul PRIMEFORM",
+    title: "Tot ce ai nevoie ca să te antrenezi, să progresezi și să rămâi constant.",
+    trainingEyebrow: "Antrenament personalizat",
+    trainingTitle: "Antrenament construit în jurul tău",
+    trainingBody:
+      "Programul tău se bazează pe obiectivul, experiența, echipamentul disponibil, programul și recuperarea ta. Fiecare exercițiu include instrucțiuni clare, repetări țintă, perioade de pauză și indicații de progresie.",
+    setsLine: "4 serii · 8–10 repetări · 90s pauză",
+    exerciseProgression: "Progresul exercițiului",
+    nutritionEyebrow: "Nutriție",
+    nutritionTitle: "Nutriție care se potrivește vieții reale",
+    proteinLabel: "proteine",
+    nutritionBody:
+      "Obiective de calorii și macronutrienți, îndrumare pentru structura meselor și ajustări practice, fără să elimini toate alimentele care îți plac.",
+    reviewEyebrow: "Evaluare săptămânală",
+    reviewTitle: "Responsabilizare săptămânală",
+    energy: "Energie",
+    sleep: "Somn",
+    reviewBody: "Planul se schimbă atunci când datele tale arată că trebuie să se schimbe.",
+  },
+} as const;
 
 function ScoreBar({ label, value }: { label: string; value: number }) {
   return (
@@ -23,11 +69,14 @@ function ScoreBar({ label, value }: { label: string; value: number }) {
 }
 
 export function CoachingSystem() {
+  const { lang } = useI18n();
+  const t = copy[lang];
+
   return (
     <section className="container-p section">
       <SectionHeader
-        eyebrow="The PRIMEFORM system"
-        title="Everything you need to train, improve and stay consistent."
+        eyebrow={t.eyebrow}
+        title={t.title}
       />
 
       <div className="mt-12 grid gap-5 lg:grid-cols-[1.4fr_1fr]">
@@ -36,13 +85,11 @@ export function CoachingSystem() {
           <GlassCard variant="solid" className="flex h-full flex-col p-6 sm:p-8">
             <div className="flex items-center gap-2 text-accent">
               <Dumbbell className="size-5" strokeWidth={1.7} />
-              <span className="eyebrow text-accent">Personalised training</span>
+              <span className="eyebrow text-accent">{t.trainingEyebrow}</span>
             </div>
-            <h3 className="mt-3 text-2xl font-bold">Training built around you</h3>
+            <h3 className="mt-3 text-2xl font-bold">{t.trainingTitle}</h3>
             <p className="mt-2 max-w-md text-sm leading-relaxed text-muted">
-              Your programme is based on your goal, experience, available equipment,
-              schedule and recovery. Each exercise includes clear instructions, target
-              repetitions, rest periods and progression guidance.
+              {t.trainingBody}
             </p>
 
             {/* Live workout preview */}
@@ -51,7 +98,7 @@ export function CoachingSystem() {
                 <div>
                   <p className="font-semibold">Incline Dumbbell Press</p>
                   <p className="tnum text-xs text-muted">
-                    4 sets · 8–10 reps · 90s rest
+                    {t.setsLine}
                   </p>
                 </div>
                 <span className="pill border-line text-muted">
@@ -63,7 +110,7 @@ export function CoachingSystem() {
               </div>
               <div className="mt-4">
                 <div className="flex items-center justify-between text-xs text-muted">
-                  <span>Exercise progression</span>
+                  <span>{t.exerciseProgression}</span>
                   <span className="tnum font-semibold text-olive">+8%</span>
                 </div>
                 <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-ink/8">
@@ -80,9 +127,9 @@ export function CoachingSystem() {
             <GlassCard variant="solid" className="h-full p-6">
               <div className="flex items-center gap-2 text-accent">
                 <Utensils className="size-5" strokeWidth={1.7} />
-                <span className="eyebrow text-accent">Nutrition</span>
+                <span className="eyebrow text-accent">{t.nutritionEyebrow}</span>
               </div>
-              <h3 className="mt-3 text-xl font-bold">Nutrition that fits real life</h3>
+              <h3 className="mt-3 text-xl font-bold">{t.nutritionTitle}</h3>
               <div className="mt-4 flex gap-6">
                 <div>
                   <p className="tnum font-heading text-3xl font-bold">
@@ -94,12 +141,11 @@ export function CoachingSystem() {
                   <p className="tnum font-heading text-3xl font-bold">
                     {seedNutrition.protein} g
                   </p>
-                  <p className="text-xs uppercase tracking-wide text-muted">protein</p>
+                  <p className="text-xs uppercase tracking-wide text-muted">{t.proteinLabel}</p>
                 </div>
               </div>
               <p className="mt-3 text-sm leading-relaxed text-muted">
-                Calorie and macronutrient targets, meal structure guidance and
-                practical adjustments without removing every food you enjoy.
+                {t.nutritionBody}
               </p>
             </GlassCard>
           </Reveal>
@@ -109,15 +155,15 @@ export function CoachingSystem() {
             <GlassCard variant="solid" className="h-full p-6">
               <div className="flex items-center gap-2 text-accent">
                 <ClipboardCheck className="size-5" strokeWidth={1.7} />
-                <span className="eyebrow text-accent">Weekly review</span>
+                <span className="eyebrow text-accent">{t.reviewEyebrow}</span>
               </div>
-              <h3 className="mt-3 text-xl font-bold">Weekly accountability</h3>
+              <h3 className="mt-3 text-xl font-bold">{t.reviewTitle}</h3>
               <div className="mt-4 space-y-3">
-                <ScoreBar label="Energy" value={8} />
-                <ScoreBar label="Sleep" value={7} />
+                <ScoreBar label={t.energy} value={8} />
+                <ScoreBar label={t.sleep} value={7} />
               </div>
               <p className="mt-3 text-sm leading-relaxed text-muted">
-                The plan changes when your data shows that it needs to change.
+                {t.reviewBody}
               </p>
             </GlassCard>
           </Reveal>

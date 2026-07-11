@@ -8,10 +8,86 @@ import { Drawer } from "@/components/coach/drawer";
 import { Field, TextArea, TextInput } from "@/components/ui/form";
 import { usePrimeStore } from "@/lib/store/store";
 import { toast } from "@/lib/store/hooks";
+import { useI18n } from "@/lib/i18n";
+import type { Lang } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { CheckIn } from "@/lib/store/types";
 
 const filters = ["Pending", "Submitted", "Reviewed", "Overdue"] as const;
+
+const copy = {
+  en: {
+    title: "Check-in review",
+    subtitle: "Review submissions and send feedback.",
+    checkin: "Check-in",
+    filterPending: "Pending",
+    filterSubmitted: "Submitted",
+    filterReviewed: "Reviewed",
+    filterOverdue: "Overdue",
+    overall: "Overall",
+    nutrition: "Nutrition",
+    energy: "Energy",
+    sleep: "Sleep",
+    stress: "Stress",
+    workouts: "Workouts",
+    emptyTitle: "No check-ins require review.",
+    emptyBody: "Everything is currently up to date.",
+    wentWell: "What went well",
+    challenge: "Biggest challenge",
+    changes: "Requested changes",
+    discomfort: "Discomfort",
+    notSubmitted: "This check-in has not been submitted yet",
+    coachResponse: "Coach response",
+    required: "This field is required.",
+    feedbackPlaceholder: "Write feedback for the client…",
+    programmeAdjust: "Programme adjustment required",
+    nutritionAdjust: "Nutrition adjustment required",
+    followUp: "Follow-up needed",
+    nextPriority: "Next week priority",
+    priorityPlaceholder: "e.g. Prioritise sleep and protein",
+    sendFeedback: "Send Feedback",
+    feedbackSent: "Feedback sent to the client.",
+  },
+  ro: {
+    title: "Verificare check-in-uri",
+    subtitle: "Verifică trimiterile și trimite feedback.",
+    checkin: "Check-in",
+    filterPending: "În așteptare",
+    filterSubmitted: "Trimise",
+    filterReviewed: "Verificate",
+    filterOverdue: "Restante",
+    overall: "General",
+    nutrition: "Nutriție",
+    energy: "Energie",
+    sleep: "Somn",
+    stress: "Stres",
+    workouts: "Antrenamente",
+    emptyTitle: "Niciun check-in nu necesită verificare.",
+    emptyBody: "Totul este la zi în acest moment.",
+    wentWell: "Ce a mers bine",
+    challenge: "Cea mai mare provocare",
+    changes: "Modificări solicitate",
+    discomfort: "Disconfort",
+    notSubmitted: "Acest check-in nu a fost încă trimis",
+    coachResponse: "Răspunsul antrenorului",
+    required: "Acest câmp este obligatoriu.",
+    feedbackPlaceholder: "Scrie feedback pentru client…",
+    programmeAdjust: "Necesită ajustarea programului",
+    nutritionAdjust: "Necesită ajustarea nutriției",
+    followUp: "Necesită urmărire",
+    nextPriority: "Prioritatea săptămânii viitoare",
+    priorityPlaceholder: "ex.: Prioritizează somnul și proteinele",
+    sendFeedback: "Trimite feedback",
+    feedbackSent: "Feedback trimis clientului.",
+  },
+} as const;
+
+const filterLabel: Record<(typeof filters)[number], keyof (typeof copy)["en"]> = {
+  Pending: "filterPending",
+  Submitted: "filterSubmitted",
+  Reviewed: "filterReviewed",
+  Overdue: "filterOverdue",
+};
 
 const statusToFilter = (s: CheckIn["status"]) => {
   if (s === "Needs Review" || s === "Submitted") return "Submitted";
@@ -21,6 +97,8 @@ const statusToFilter = (s: CheckIn["status"]) => {
 };
 
 export default function CheckinsPage() {
+  const { lang } = useI18n();
+  const t = copy[lang];
   const checkIns = usePrimeStore((s) => s.checkIns);
   const reviewCheckIn = usePrimeStore((s) => s.reviewCheckIn);
   const [filter, setFilter] = useState<(typeof filters)[number]>("Submitted");
@@ -32,8 +110,8 @@ export default function CheckinsPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold sm:text-3xl">Check-in review</h1>
-        <p className="mt-1.5 text-muted">Review submissions and send feedback.</p>
+        <h1 className="text-2xl font-bold sm:text-3xl">{t.title}</h1>
+        <p className="mt-1.5 text-muted">{t.subtitle}</p>
       </div>
 
       {/* Filters */}
@@ -49,7 +127,7 @@ export default function CheckinsPage() {
                 filter === f ? "border-transparent bg-accent text-accent-ink" : "border-line text-muted hover:text-ink",
               )}
             >
-              {f} <span className="tnum opacity-70">{count}</span>
+              {t[filterLabel[f]]} <span className="tnum opacity-70">{count}</span>
             </button>
           );
         })}
@@ -64,7 +142,7 @@ export default function CheckinsPage() {
                 <p className="text-sm text-muted">{c.weekLabel}</p>
                 {c.overall != null && (
                   <p className="tnum mt-1 text-xs text-faint">
-                    Overall {c.overall}/10 · Nutrition {c.nutrition}/10 · Energy {c.energy}/10
+                    {t.overall} {c.overall}/10 · {t.nutrition} {c.nutrition}/10 · {t.energy} {c.energy}/10
                   </p>
                 )}
               </div>
@@ -75,13 +153,13 @@ export default function CheckinsPage() {
       ) : (
         <div className="mt-5 grid place-items-center rounded-section border border-dashed border-line py-16 text-center">
           <InboxIcon className="size-8 text-faint" strokeWidth={1.5} />
-          <p className="mt-4 text-lg font-semibold">No check-ins require review.</p>
-          <p className="text-sm text-muted">Everything is currently up to date.</p>
+          <p className="mt-4 text-lg font-semibold">{t.emptyTitle}</p>
+          <p className="text-sm text-muted">{t.emptyBody}</p>
         </div>
       )}
 
-      <Drawer open={!!active} onClose={() => setOpenId(null)} title={active ? `${active.clientName} · Check-in` : "Check-in"}>
-        {active && <ReviewPanel checkIn={active} onReview={reviewCheckIn} onClose={() => setOpenId(null)} />}
+      <Drawer open={!!active} onClose={() => setOpenId(null)} title={active ? `${active.clientName} · ${t.checkin}` : t.checkin}>
+        {active && <ReviewPanel checkIn={active} lang={lang} onReview={reviewCheckIn} onClose={() => setOpenId(null)} />}
       </Drawer>
     </div>
   );
@@ -89,13 +167,16 @@ export default function CheckinsPage() {
 
 function ReviewPanel({
   checkIn,
+  lang,
   onReview,
   onClose,
 }: {
   checkIn: CheckIn;
+  lang: Lang;
   onReview: (id: string, input: { coachResponse: string; programmeAdjustment: boolean; nutritionAdjustment: boolean; followUp: boolean; nextPriority: string }) => void;
   onClose: () => void;
 }) {
+  const t = copy[lang];
   const [response, setResponse] = useState(checkIn.coachResponse ?? "");
   const [flags, setFlags] = useState({ programme: !!checkIn.programmeAdjustment, nutrition: !!checkIn.nutritionAdjustment, followUp: !!checkIn.followUp });
   const [priority, setPriority] = useState(checkIn.nextPriority ?? "");
@@ -105,7 +186,7 @@ function ReviewPanel({
 
   const send = () => {
     if (!response.trim()) {
-      setError("This field is required.");
+      setError(t.required);
       return;
     }
     onReview(checkIn.id, {
@@ -115,7 +196,7 @@ function ReviewPanel({
       followUp: flags.followUp,
       nextPriority: priority,
     });
-    toast("Feedback sent to the client.", undefined, "success");
+    toast(t.feedbackSent, undefined, "success");
     onClose();
   };
 
@@ -124,35 +205,35 @@ function ReviewPanel({
       {submitted ? (
         <>
           <div className="grid grid-cols-3 gap-2 text-center">
-            <Score label="Overall" value={checkIn.overall} />
-            <Score label="Nutrition" value={checkIn.nutrition} />
-            <Score label="Energy" value={checkIn.energy} />
-            <Score label="Sleep" value={checkIn.sleep} />
-            <Score label="Stress" value={checkIn.stress} />
-            <Score label="Workouts" value={checkIn.workoutsCompleted} />
+            <Score label={t.overall} value={checkIn.overall} />
+            <Score label={t.nutrition} value={checkIn.nutrition} />
+            <Score label={t.energy} value={checkIn.energy} />
+            <Score label={t.sleep} value={checkIn.sleep} />
+            <Score label={t.stress} value={checkIn.stress} />
+            <Score label={t.workouts} value={checkIn.workoutsCompleted} />
           </div>
-          {checkIn.wentWell && <Answer label="What went well" text={checkIn.wentWell} />}
-          {checkIn.challenge && <Answer label="Biggest challenge" text={checkIn.challenge} />}
-          {checkIn.changes && <Answer label="Requested changes" text={checkIn.changes} />}
+          {checkIn.wentWell && <Answer label={t.wentWell} text={checkIn.wentWell} />}
+          {checkIn.challenge && <Answer label={t.challenge} text={checkIn.challenge} />}
+          {checkIn.changes && <Answer label={t.changes} text={checkIn.changes} />}
           {checkIn.discomfort === "Yes" && checkIn.discomfortDetail && (
-            <Answer label="Discomfort" text={checkIn.discomfortDetail} />
+            <Answer label={t.discomfort} text={checkIn.discomfortDetail} />
           )}
         </>
       ) : (
         <p className="rounded-md border border-dashed border-line p-4 text-sm text-muted">
-          This check-in has not been submitted yet ({checkIn.weekLabel}).
+          {t.notSubmitted} ({checkIn.weekLabel}).
         </p>
       )}
 
       <div className="space-y-4 border-t border-line pt-5">
-        <Field label="Coach response" error={error ?? undefined}>
-          <TextArea rows={4} value={response} onChange={(e) => setResponse(e.target.value)} placeholder="Write feedback for the client…" />
+        <Field label={t.coachResponse} error={error ?? undefined}>
+          <TextArea rows={4} value={response} onChange={(e) => setResponse(e.target.value)} placeholder={t.feedbackPlaceholder} />
         </Field>
         <div className="space-y-2">
           {[
-            { key: "programme", label: "Programme adjustment required" },
-            { key: "nutrition", label: "Nutrition adjustment required" },
-            { key: "followUp", label: "Follow-up needed" },
+            { key: "programme", label: t.programmeAdjust },
+            { key: "nutrition", label: t.nutritionAdjust },
+            { key: "followUp", label: t.followUp },
           ].map((f) => (
             <label key={f.key} className="flex cursor-pointer items-center gap-2.5 text-sm">
               <input
@@ -165,10 +246,10 @@ function ReviewPanel({
             </label>
           ))}
         </div>
-        <Field label="Next week priority" optional>
-          <TextInput value={priority} onChange={(e) => setPriority(e.target.value)} placeholder="e.g. Prioritise sleep and protein" />
+        <Field label={t.nextPriority} optional>
+          <TextInput value={priority} onChange={(e) => setPriority(e.target.value)} placeholder={t.priorityPlaceholder} />
         </Field>
-        <button onClick={send} className="btn btn-primary w-full">Send Feedback</button>
+        <button onClick={send} className="btn btn-primary w-full">{t.sendFeedback}</button>
       </div>
     </div>
   );

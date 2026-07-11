@@ -1,9 +1,9 @@
 export interface Service {
   id: string;
-  name: string;
-  tagline: string;
-  includes: string[];
-  ctaLabel: string;
+  name: { en: string; ro: string };
+  tagline: { en: string; ro: string };
+  includes: { en: string; ro: string }[];
+  ctaLabel: { en: string; ro: string };
   href: string;
   highlighted?: boolean;
 }
@@ -11,51 +11,57 @@ export interface Service {
 export const services: Service[] = [
   {
     id: "online",
-    name: "Online Coaching",
-    tagline:
-      "A complete remote coaching system for clients who want structure, flexibility and direct support.",
+    name: { en: "Online Coaching", ro: "Coaching online" },
+    tagline: {
+      en: "A complete remote coaching system for clients who want structure, flexibility and direct support.",
+      ro: "Un sistem complet de coaching la distanță pentru cei care vor structură, flexibilitate și sprijin direct.",
+    },
     includes: [
-      "personalised training programme",
-      "weekly check-in",
-      "nutrition targets",
-      "progress dashboard",
-      "exercise demonstrations",
-      "direct messaging",
-      "monthly programme review",
+      { en: "personalised training programme", ro: "program de antrenament personalizat" },
+      { en: "weekly check-in", ro: "check-in săptămânal" },
+      { en: "nutrition targets", ro: "obiective de nutriție" },
+      { en: "progress dashboard", ro: "panou de progres" },
+      { en: "exercise demonstrations", ro: "demonstrații pentru exerciții" },
+      { en: "direct messaging", ro: "mesagerie directă" },
+      { en: "monthly programme review", ro: "revizuire lunară a programului" },
     ],
-    ctaLabel: "Explore Online Coaching",
+    ctaLabel: { en: "Explore Online Coaching", ro: "Descoperă coaching-ul online" },
     href: "/coaching",
   },
   {
     id: "hybrid",
-    name: "Hybrid Coaching",
-    tagline:
-      "In-person sessions combined with a complete online plan for the rest of the week.",
+    name: { en: "Hybrid Coaching", ro: "Coaching hibrid" },
+    tagline: {
+      en: "In-person sessions combined with a complete online plan for the rest of the week.",
+      ro: "Ședințe față în față combinate cu un plan online complet pentru restul săptămânii.",
+    },
     includes: [
-      "scheduled personal training sessions",
-      "additional online workouts",
-      "weekly check-ins",
-      "nutrition guidance",
-      "full progress tracking",
-      "support between sessions",
+      { en: "scheduled personal training sessions", ro: "ședințe programate de antrenament personal" },
+      { en: "additional online workouts", ro: "antrenamente online suplimentare" },
+      { en: "weekly check-ins", ro: "check-in-uri săptămânale" },
+      { en: "nutrition guidance", ro: "îndrumare în nutriție" },
+      { en: "full progress tracking", ro: "monitorizare completă a progresului" },
+      { en: "support between sessions", ro: "sprijin între ședințe" },
     ],
-    ctaLabel: "Explore Hybrid Coaching",
+    ctaLabel: { en: "Explore Hybrid Coaching", ro: "Descoperă coaching-ul hibrid" },
     href: "/coaching#hybrid",
     highlighted: true,
   },
   {
     id: "personal",
-    name: "Personal Training",
-    tagline:
-      "Private coaching sessions focused on technique, confidence and measurable progression.",
+    name: { en: "Personal Training", ro: "Antrenament personal" },
+    tagline: {
+      en: "Private coaching sessions focused on technique, confidence and measurable progression.",
+      ro: "Ședințe private de coaching axate pe tehnică, încredere și progres măsurabil.",
+    },
     includes: [
-      "one-to-one sessions",
-      "movement and technique guidance",
-      "personalised session planning",
-      "strength and performance tracking",
-      "supplementary home or gym programme",
+      { en: "one-to-one sessions", ro: "ședințe individuale" },
+      { en: "movement and technique guidance", ro: "îndrumare pentru mișcare și tehnică" },
+      { en: "personalised session planning", ro: "planificare personalizată a ședințelor" },
+      { en: "strength and performance tracking", ro: "monitorizarea forței și a performanței" },
+      { en: "supplementary home or gym programme", ro: "program suplimentar acasă sau la sală" },
     ],
-    ctaLabel: "Explore Personal Training",
+    ctaLabel: { en: "Explore Personal Training", ro: "Descoperă antrenamentul personal" },
     href: "/personal-training",
   },
 ];

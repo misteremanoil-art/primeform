@@ -5,6 +5,7 @@ import { GlassCard } from "@/components/ui/glass-card";
 import { StatusPill } from "@/components/fitness/status-pill";
 import { usePrimeStore } from "@/lib/store/store";
 import { toast } from "@/lib/store/hooks";
+import { useI18n } from "@/lib/i18n";
 import type { BookingStatus } from "@/lib/store/types";
 
 const methodIcon: Record<string, typeof Video> = {
@@ -14,7 +15,44 @@ const methodIcon: Record<string, typeof Video> = {
   "WhatsApp call": MessageCircle,
 };
 
+const copy = {
+  en: {
+    title: "Bookings",
+    subtitle: "Consultations and their status.",
+    sendReminder: "Send reminder",
+    markCompleted: "Mark completed",
+    reschedule: "Reschedule",
+    cancel: "Cancel",
+    noShow: "No-show",
+    reminderSent: "Reminder sent — demo only",
+    markedCompleted: "Marked completed",
+    markedRescheduled: "Marked rescheduled",
+    bookingCancelled: "Booking cancelled",
+    markedNoShow: "Marked as no-show",
+    emptyTitle: "No consultations scheduled.",
+    emptyBody: "New bookings will appear here automatically.",
+  },
+  ro: {
+    title: "Programări",
+    subtitle: "Consultațiile și statusul lor.",
+    sendReminder: "Trimite reminder",
+    markCompleted: "Marchează finalizat",
+    reschedule: "Reprogramează",
+    cancel: "Anulează",
+    noShow: "Neprezentare",
+    reminderSent: "Reminder trimis — doar demo",
+    markedCompleted: "Marcat ca finalizat",
+    markedRescheduled: "Marcat ca reprogramat",
+    bookingCancelled: "Programare anulată",
+    markedNoShow: "Marcat ca neprezentare",
+    emptyTitle: "Nicio consultație programată.",
+    emptyBody: "Programările noi vor apărea aici automat.",
+  },
+} as const;
+
 export default function BookingsPage() {
+  const { lang } = useI18n();
+  const t = copy[lang];
   const bookings = usePrimeStore((s) => s.bookings);
   const updateBookingStatus = usePrimeStore((s) => s.updateBookingStatus);
 
@@ -28,8 +66,8 @@ export default function BookingsPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold sm:text-3xl">Bookings</h1>
-        <p className="mt-1.5 text-muted">Consultations and their status.</p>
+        <h1 className="text-2xl font-bold sm:text-3xl">{t.title}</h1>
+        <p className="mt-1.5 text-muted">{t.subtitle}</p>
       </div>
 
       {sorted.length > 0 ? (
@@ -50,11 +88,11 @@ export default function BookingsPage() {
                   <StatusPill status={b.status} />
                 </div>
                 <div className="no-scrollbar mt-3 flex gap-2 overflow-x-auto border-t border-line pt-3">
-                  <Act icon={Bell} label="Send reminder" onClick={() => toast("Reminder sent — demo only")} />
-                  <Act icon={Check} label="Mark completed" onClick={() => setStatus(b.id, "Completed", "Marked completed")} />
-                  <Act icon={RefreshCw} label="Reschedule" onClick={() => setStatus(b.id, "Rescheduled", "Marked rescheduled")} />
-                  <Act icon={X} label="Cancel" onClick={() => setStatus(b.id, "Cancelled", "Booking cancelled")} />
-                  <Act icon={UserX} label="No-show" onClick={() => setStatus(b.id, "No Show", "Marked as no-show")} />
+                  <Act icon={Bell} label={t.sendReminder} onClick={() => toast(t.reminderSent)} />
+                  <Act icon={Check} label={t.markCompleted} onClick={() => setStatus(b.id, "Completed", t.markedCompleted)} />
+                  <Act icon={RefreshCw} label={t.reschedule} onClick={() => setStatus(b.id, "Rescheduled", t.markedRescheduled)} />
+                  <Act icon={X} label={t.cancel} onClick={() => setStatus(b.id, "Cancelled", t.bookingCancelled)} />
+                  <Act icon={UserX} label={t.noShow} onClick={() => setStatus(b.id, "No Show", t.markedNoShow)} />
                 </div>
               </GlassCard>
             );
@@ -63,8 +101,8 @@ export default function BookingsPage() {
       ) : (
         <div className="grid place-items-center rounded-section border border-dashed border-line py-16 text-center">
           <CalendarX className="size-8 text-faint" strokeWidth={1.5} />
-          <p className="mt-4 text-lg font-semibold">No consultations scheduled.</p>
-          <p className="text-sm text-muted">New bookings will appear here automatically.</p>
+          <p className="mt-4 text-lg font-semibold">{t.emptyTitle}</p>
+          <p className="text-sm text-muted">{t.emptyBody}</p>
         </div>
       )}
     </div>

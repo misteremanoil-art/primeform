@@ -5,6 +5,20 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Bell } from "lucide-react";
 import { usePrimeStore } from "@/lib/store/store";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
+
+const copy = {
+  en: {
+    title: "Notifications",
+    ariaLabel: (unread: number) => `Notifications${unread ? `, ${unread} unread` : ""}`,
+    empty: "You are all caught up.",
+  },
+  ro: {
+    title: "Notificări",
+    ariaLabel: (unread: number) => `Notificări${unread ? `, ${unread} necitite` : ""}`,
+    empty: "Ești la zi.",
+  },
+} as const;
 
 export function NotificationBell({ audience }: { audience: "client" | "coach" }) {
   // Select the stable array; filter during render (a filter inside the
@@ -14,6 +28,8 @@ export function NotificationBell({ audience }: { audience: "client" | "coach" })
   const markRead = usePrimeStore((s) => s.markNotificationsRead);
   const [open, setOpen] = useState(false);
   const unread = notifications.filter((n) => !n.read).length;
+  const { lang } = useI18n();
+  const t = copy[lang];
 
   const toggle = () => {
     setOpen((o) => {
@@ -29,7 +45,7 @@ export function NotificationBell({ audience }: { audience: "client" | "coach" })
       <button
         onClick={toggle}
         className="relative grid size-9 place-items-center rounded-full text-muted transition-colors hover:text-ink"
-        aria-label={`Notifications${unread ? `, ${unread} unread` : ""}`}
+        aria-label={t.ariaLabel(unread)}
       >
         <Bell className="size-5" strokeWidth={1.8} />
         {unread > 0 && (
@@ -51,10 +67,10 @@ export function NotificationBell({ audience }: { audience: "client" | "coach" })
               className="glass glass-dense absolute right-0 top-11 z-50 w-72 rounded-card p-2"
             >
               <p className="px-3 py-2 text-xs font-bold uppercase tracking-wide text-muted">
-                Notifications
+                {t.title}
               </p>
               {sorted.length === 0 ? (
-                <p className="px-3 py-4 text-sm text-muted">You are all caught up.</p>
+                <p className="px-3 py-4 text-sm text-muted">{t.empty}</p>
               ) : (
                 <ul className="max-h-80 overflow-y-auto">
                   {sorted.map((n) => (

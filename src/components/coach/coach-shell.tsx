@@ -16,20 +16,47 @@ import {
 import { usePrimeStore } from "@/lib/store/store";
 import { useHasHydrated, toast } from "@/lib/store/hooks";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
+import { LanguageToggle } from "@/components/ui/language-toggle";
 import { NotificationBell } from "@/components/portal/notification-bell";
 import { Logo } from "@/components/site/logo";
+import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 const nav = [
-  { href: "/coach", label: "Overview", icon: LayoutDashboard },
-  { href: "/coach/leads", label: "Leads", icon: Inbox },
-  { href: "/coach/clients", label: "Clients", icon: Users },
-  { href: "/coach/checkins", label: "Check-ins", icon: ClipboardCheck },
-  { href: "/coach/bookings", label: "Bookings", icon: CalendarDays },
-  { href: "/coach/programs", label: "Programs", icon: Dumbbell },
+  { href: "/coach", label: { en: "Overview", ro: "Prezentare generală" }, icon: LayoutDashboard },
+  { href: "/coach/leads", label: { en: "Leads", ro: "Leaduri" }, icon: Inbox },
+  { href: "/coach/clients", label: { en: "Clients", ro: "Clienți" }, icon: Users },
+  { href: "/coach/checkins", label: { en: "Check-ins", ro: "Check-in-uri" }, icon: ClipboardCheck },
+  { href: "/coach/bookings", label: { en: "Bookings", ro: "Programări" }, icon: CalendarDays },
+  { href: "/coach/programs", label: { en: "Programs", ro: "Programe" }, icon: Dumbbell },
 ];
 
+const copy = {
+  en: {
+    loading: "Loading the coach dashboard…",
+    coach: "Coach",
+    resetLabel: "Reset demo data",
+    exitLabel: "Exit demo",
+    resetToastTitle: "Demo data reset",
+    resetToastBody: "The dashboard is back to the seed state.",
+    exitAria: "Exit demo and return to homepage",
+    resetAria: "Reset demo data",
+  },
+  ro: {
+    loading: "Se încarcă tabloul de bord…",
+    coach: "Coach",
+    resetLabel: "Resetează datele demo",
+    exitLabel: "Ieși din demo",
+    resetToastTitle: "Date demo resetate",
+    resetToastBody: "Tabloul de bord a revenit la starea inițială.",
+    exitAria: "Ieși din demo și revino la pagina principală",
+    resetAria: "Resetează datele demo",
+  },
+} as const;
+
 export function CoachShell({ children }: { children: React.ReactNode }) {
+  const { lang } = useI18n();
+  const t = copy[lang];
   const hydrated = useHasHydrated();
   const role = usePrimeStore((s) => s.role);
   const setRole = usePrimeStore((s) => s.setRole);
@@ -46,7 +73,7 @@ export function CoachShell({ children }: { children: React.ReactNode }) {
       <div className="grid min-h-dvh place-items-center">
         <div className="flex flex-col items-center gap-3 text-muted">
           <Logo className="size-10 animate-pulse" />
-          <p className="text-sm">Loading the coach dashboard…</p>
+          <p className="text-sm">{t.loading}</p>
         </div>
       </div>
     );
@@ -57,7 +84,7 @@ export function CoachShell({ children }: { children: React.ReactNode }) {
 
   const handleReset = () => {
     resetDemo();
-    toast("Demo data reset", "The dashboard is back to the seed state.");
+    toast(t.resetToastTitle, t.resetToastBody);
   };
   const exit = () => {
     setRole("visitor");
@@ -87,18 +114,18 @@ export function CoachShell({ children }: { children: React.ReactNode }) {
               )}
             >
               <item.icon className="size-4.5" strokeWidth={1.8} />
-              {item.label}
+              {item.label[lang]}
             </Link>
           ))}
         </nav>
         <div className="space-y-1 border-t border-line pt-3">
           <button onClick={handleReset} className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-ink/5 hover:text-ink">
             <RotateCcw className="size-4.5" strokeWidth={1.8} />
-            Reset demo data
+            {t.resetLabel}
           </button>
           <button onClick={exit} className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-ink/5 hover:text-ink">
             <LogOut className="size-4.5" strokeWidth={1.8} />
-            Exit demo
+            {t.exitLabel}
           </button>
           <div className="px-3 pt-2">
             <ThemeSwitcher />
@@ -112,23 +139,24 @@ export function CoachShell({ children }: { children: React.ReactNode }) {
           <div className="flex items-center justify-between gap-3 px-4 py-3 lg:px-8">
             <div className="flex items-center gap-2 lg:hidden">
               <Logo className="size-6" />
-              <span className="font-heading text-base font-extrabold">Coach</span>
+              <span className="font-heading text-base font-extrabold">{t.coach}</span>
             </div>
             <p className="hidden text-sm font-medium text-muted lg:block">
-              {nav.find((n) => isActive(n.href))?.label ?? "Coach"}
+              {nav.find((n) => isActive(n.href))?.label[lang] ?? t.coach}
             </p>
             <div className="flex items-center gap-1.5">
               <button
                 onClick={exit}
                 className="inline-flex rounded-full p-2 text-muted transition-colors hover:text-ink lg:hidden"
-                aria-label="Exit demo and return to homepage"
+                aria-label={t.exitAria}
               >
                 <LogOut className="size-4.5" strokeWidth={1.8} />
               </button>
               <NotificationBell audience="coach" />
-              <button onClick={handleReset} className="hidden rounded-full p-2 text-muted hover:text-ink lg:inline-flex" aria-label="Reset demo data">
+              <button onClick={handleReset} className="hidden rounded-full p-2 text-muted hover:text-ink lg:inline-flex" aria-label={t.resetAria}>
                 <RotateCcw className="size-4.5" strokeWidth={1.8} />
               </button>
+              <LanguageToggle className="ml-0.5" />
               <div className="lg:hidden">
                 <ThemeSwitcher />
               </div>
@@ -146,7 +174,7 @@ export function CoachShell({ children }: { children: React.ReactNode }) {
                 )}
               >
                 <item.icon className="size-3.5" strokeWidth={1.8} />
-                {item.label}
+                {item.label[lang]}
               </Link>
             ))}
           </nav>
