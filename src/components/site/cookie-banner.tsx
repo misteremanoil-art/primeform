@@ -1,9 +1,10 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { usePrimeStore } from "@/lib/store/store";
 import { useHasHydrated } from "@/lib/store/hooks";
+import { useFramed } from "@/lib/use-framed";
 import { useI18n } from "@/lib/i18n";
 
 const copy = {
@@ -33,19 +34,12 @@ export function CookieBanner() {
   const setConsent = usePrimeStore((s) => s.setCookieConsent);
   const [expanded, setExpanded] = useState(false);
 
-  // The studio gallery embeds the site as a preview thumbnail. A consent dialog
-  // has nothing to ask of someone looking at a card, and it covers the hero it
-  // is meant to be showing off, so it stays out of frames.
-  const [framed, setFramed] = useState(false);
-  useEffect(() => {
-    try {
-      setFramed(window.self !== window.top);
-    } catch {
-      setFramed(true); // cross-origin frame — still a frame
-    }
-  }, []);
+  // A consent dialog has nothing to ask of someone looking at a preview card,
+  // and it covers the hero it is meant to be showing off. Explicitly `false`,
+  // so it stays down while we do not yet know.
+  const framed = useFramed();
 
-  const visible = hydrated && !framed && consent === null;
+  const visible = hydrated && framed === false && consent === null;
 
   return (
     <AnimatePresence>

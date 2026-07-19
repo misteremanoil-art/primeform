@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { LanguageProvider } from "@/lib/i18n";
 import { Atmosphere } from "@/components/site/atmosphere";
 import { CookieBanner } from "@/components/site/cookie-banner";
+import { BackToStudio } from "@/components/site/back-to-studio";
 import { Toaster } from "@/components/ui/toaster";
 import { FluidParticlesBackground } from "@/components/ui/fluid-particles-background";
 
@@ -94,6 +95,7 @@ export default function RootLayout({
           <Suspense fallback={null}>
             <LanguageProvider>
               <div className="relative z-10 flex min-h-dvh flex-col">{children}</div>
+              <BackToStudio />
               <CookieBanner />
               <Toaster />
             </LanguageProvider>
