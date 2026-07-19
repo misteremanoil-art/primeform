@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { asset } from "@/lib/asset";
 import { cn } from "@/lib/utils";
 
 /**
@@ -24,7 +25,7 @@ export function CoachPortrait({
     >
       {/* PHOTO: cinematic coach portrait — line-art placeholder, swap for a real photo later */}
       <Image
-        src="/coach-bodybuilder.png"
+        src={asset("/coach-bodybuilder.png")}
         alt=""
         aria-hidden
         fill

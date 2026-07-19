@@ -1,5 +1,9 @@
 import { ImageResponse } from "next/og";
 
+// Without this the static export tries to treat the image as a dynamic route
+// and fails the build.
+export const dynamic = "force-static";
+
 export const alt =
   "PRIMEFORM — Personalised Fitness Coaching · Demo by Emanoil Studio";
 export const size = { width: 1200, height: 630 };

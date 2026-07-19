@@ -16,7 +16,9 @@ const dmSans = DM_Sans({
   weight: ["400", "500", "600", "700"],
 });
 
-const siteUrl = "https://primeform-demo.vercel.app";
+// The demo's home is the studio gallery. It also ships to Vercel from this repo,
+// but that copy points here rather than competing as a second original.
+const siteUrl = "https://emanoil.studio/demos/coaching";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -50,7 +52,9 @@ export const metadata: Metadata = {
     description:
       "A connected coaching platform demo by Emanoil Studio.",
   },
-  robots: { index: true, follow: true },
+  // A demo of a fictional business has no reason to be in search results, and
+  // the gallery serves every demo under a noindex header anyway.
+  robots: { index: false, follow: false },
 };
 
 export const viewport: Viewport = {
